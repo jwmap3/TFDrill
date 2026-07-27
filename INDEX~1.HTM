@@ -1,0 +1,2567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+<title>TFDrills — Forge Better Firefighters</title>
+<style>
+/* ============================================================
+   TFDrills — Stylesheet (light theme)
+   Fast, clean, mobile-first. Palette pulled from the TFDrills mark:
+   warm off-white background, fire red, steel blue, gold accents.
+   ============================================================ */
+
+:root {
+  --bg: #f6f4f0;
+  --bg-elevated: #ffffff;
+  --bg-card: #ffffff;
+  --border: #e4e0d8;
+  --red: #e11d2e;
+  --red-dark: #b3121f;
+  --blue: #2f6fed;
+  --blue-dark: #1f4dab;
+  --white: #1a1a1d;
+  --gray: #6b6d78;
+  --gray-dim: #9a9ca6;
+  --green: #1f9457;
+  --amber: #b9790a;
+  --radius: 14px;
+  --radius-sm: 9px;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --shadow-card: 0 1px 2px rgba(30, 20, 10, 0.05), 0 1px 8px rgba(30, 20, 10, 0.04);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--white);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  padding-bottom: 76px;
+}
+
+a { color: inherit; text-decoration: none; }
+ul, ol { margin: 8px 0; padding-left: 20px; }
+h1, h2, h3, h4 { margin: 0 0 10px; }
+
+.subtle { color: var(--gray); font-size: 0.88rem; }
+.fine-print { color: var(--gray-dim); font-size: 0.78rem; line-height: 1.5; margin-top: 12px; }
+.link-small { color: var(--blue); font-size: 0.85rem; cursor: pointer; }
+
+/* ---------------- Boot loader ---------------- */
+.boot-loader {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.boot-loader img { width: 96px; opacity: 0.85; }
+
+/* ---------------- Header ---------------- */
+.tfd-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(246, 244, 240, 0.94);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+}
+.tfd-header-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  position: relative;
+  padding: 8px 16px 10px;
+}
+.header-utility {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 0 4px;
+}
+.brand-logo { height: 52px; width: auto; object-fit: contain; }
+.header-right { display: flex; align-items: center; gap: 10px; }
+.profile-chip {
+  font-size: 0.72rem;
+  color: var(--gray);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.icon-btn {
+  position: relative;
+  background: none;
+  border: none;
+  color: var(--white);
+  font-size: 1.15rem;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 8px;
+  transition: background 0.15s ease;
+}
+.icon-btn:hover { background: rgba(20, 20, 20, 0.06); }
+.badge-dot {
+  position: absolute;
+  top: -2px;
+  right: -6px;
+  background: var(--red);
+  color: white;
+  font-size: 0.6rem;
+  border-radius: 999px;
+  padding: 1px 5px;
+  font-weight: 700;
+}
+
+/* ---------------- Main / layout ---------------- */
+.tfd-main {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 16px;
+}
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.page-header h2 { font-size: 1.2rem; }
+.back-btn {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  color: var(--white);
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.back-btn:hover { background: rgba(20, 20, 20, 0.05); border-color: var(--gray-dim); }
+.section-title { font-size: 1.15rem; margin: 20px 0 12px; }
+
+/* ---------------- Bottom nav ---------------- */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  background: var(--bg-elevated);
+  border-top: 1px solid var(--border);
+  z-index: 20;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.nav-item {
+  flex: 1;
+  background: none;
+  border: none;
+  color: var(--gray);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 9px 0 8px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+.nav-item:hover { background: rgba(225, 29, 46, 0.06); }
+.nav-item.active { color: var(--red); }
+.nav-icon { font-size: 1.25rem; }
+.nav-label { font-size: 0.64rem; font-weight: 600; letter-spacing: 0.02em; }
+
+/* ---------------- Buttons ---------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-family: inherit;
+  transition: transform 0.06s ease, opacity 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+.btn:active { transform: scale(0.97); }
+.btn:hover { filter: brightness(1.03); box-shadow: var(--shadow-card); }
+.btn-block { width: 100%; }
+.btn-sm { padding: 8px 12px; font-size: 0.8rem; }
+.btn-primary { background: linear-gradient(90deg, var(--red), var(--red-dark)); color: white; }
+.btn-outline { background: var(--bg-elevated); border-color: var(--border); color: var(--white); }
+.btn-ghost { background: transparent; border-color: var(--border); color: var(--gray); }
+.btn-fav-active { background: var(--amber); color: #2a1a00; border-color: var(--amber); }
+.btn-donate { background: linear-gradient(90deg, var(--green), #17794a); color: white; }
+.btn-share {
+  background: none;
+  border: 1px dashed var(--border);
+  color: var(--gray);
+  font-size: 0.8rem;
+  padding: 8px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+}
+.btn-share:hover { border-color: var(--blue); color: var(--blue); background: rgba(47, 111, 237, 0.06); }
+
+/* ---------------- Modal / overlay (onboarding, pickers) ---------------- */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 16, 10, 0.45);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 20px;
+  animation: fadeIn 0.18s ease;
+}
+.modal-card {
+  max-width: 420px;
+  width: 100%;
+  max-height: 88vh;
+  overflow-y: auto;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  text-align: center;
+  box-shadow: 0 12px 40px rgba(20, 16, 10, 0.18);
+  animation: modalIn 0.22s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+.modal-logo { width: 76px; margin-bottom: 8px; }
+.modal-card h1 { font-size: 1.25rem; }
+.modal-card form { text-align: left; margin-top: 16px; }
+
+.picker-sheet {
+  max-width: 420px;
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: 0 12px 40px rgba(20, 16, 10, 0.18);
+  animation: modalIn 0.22s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+.picker-sheet h3 { text-align: center; margin-bottom: 14px; }
+.picker-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent, var(--red));
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--white);
+  transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+}
+.picker-option:hover { background: color-mix(in srgb, var(--accent, var(--red)) 8%, white); box-shadow: var(--shadow-card); transform: translateY(-1px); }
+.picker-option .picker-icon { font-size: 1.4rem; }
+.picker-close {
+  width: 100%;
+  background: none;
+  border: none;
+  color: var(--gray);
+  padding: 10px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.86rem;
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes modalIn { from { opacity: 0; transform: translateY(10px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+/* ---------------- Onboarding form fields (used in modal) ---------------- */
+.field { display: block; margin-bottom: 16px; }
+.field > span { display: block; font-size: 0.82rem; color: var(--gray); margin-bottom: 6px; font-weight: 600; }
+.field select, .field input[type="text"], .field input[type="email"], .field textarea {
+  width: 100%;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  color: var(--white);
+  border-radius: var(--radius-sm);
+  padding: 11px 12px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  transition: border-color 0.15s ease;
+}
+.field select:focus, .field input:focus, .field textarea:focus { border-color: var(--blue); outline: none; }
+.field textarea { resize: vertical; }
+
+.shift-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.shift-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.shift-option:hover { background: rgba(225, 29, 46, 0.05); }
+.shift-option input { accent-color: var(--red); }
+.shift-option:has(input:checked) { border-color: var(--red); background: rgba(225, 29, 46, 0.1); }
+
+/* ---------------- Dashboard ---------------- */
+.dash-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.dash-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  cursor: pointer;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.12s ease, box-shadow 0.15s ease;
+}
+.dash-card:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(20, 16, 10, 0.09); }
+.dash-card-label { font-size: 0.7rem; color: var(--gray-dim); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; }
+.dash-card-main { font-weight: 700; font-size: 0.98rem; margin-bottom: 3px; }
+.dash-card-sub { font-size: 0.76rem; color: var(--gray); }
+
+.panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow-card);
+}
+.panel-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.panel-header h3 { margin: 0; }
+
+.mission-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.mission-label { flex: 1 1 auto; font-size: 0.82rem; }
+.mission-bar { flex: 1 1 80px; height: 6px; background: var(--bg); border-radius: 999px; overflow: hidden; }
+.mission-fill { height: 100%; background: linear-gradient(90deg, var(--red), var(--blue)); }
+.mission-count { font-size: 0.76rem; color: var(--gray); width: 34px; text-align: right; }
+
+.mini-video-list { display: flex; flex-direction: column; gap: 8px; }
+.mini-video-row { display: flex; justify-content: space-between; font-size: 0.82rem; }
+.mini-video-drill { font-weight: 600; }
+.mini-video-meta { color: var(--gray); font-size: 0.76rem; }
+
+/* ---------------- Hero "Get Training" grid ---------------- */
+.hero-grid-section { margin-top: 4px; }
+.button-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.grid-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  color: var(--white);
+  font-family: inherit;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.12s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+.grid-btn:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent, var(--red));
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--accent, var(--red)) 22%, transparent);
+}
+.grid-btn-icon-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  background: color-mix(in srgb, var(--accent, var(--red)) 14%, white);
+}
+.grid-btn-label { font-size: 0.82rem; font-weight: 700; text-align: center; }
+
+/* ---------------- Drill list / detail ---------------- */
+.subcat-title { font-size: 0.85rem; color: var(--gray); text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 8px; }
+.drill-list { display: flex; flex-direction: column; gap: 8px; }
+.drill-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.drill-row:hover { background: rgba(47, 111, 237, 0.05); border-color: var(--blue); }
+.drill-row-name { font-weight: 700; font-size: 0.92rem; }
+.drill-row-meta { font-size: 0.76rem; color: var(--gray); margin-top: 2px; }
+.fav-star { font-size: 1.3rem; color: var(--gray-dim); cursor: pointer; padding: 4px; transition: transform 0.15s ease, color 0.15s ease; }
+.fav-star:hover { transform: scale(1.15); }
+.fav-star.active { color: var(--amber); }
+
+.drill-detail h4 { margin-top: 18px; font-size: 0.92rem; color: var(--blue); }
+.chip-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; }
+.chip {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 0.74rem;
+  color: var(--gray);
+}
+.chip-cat { color: var(--blue); border-color: var(--blue); }
+.plain-list li { margin-bottom: 4px; font-size: 0.9rem; line-height: 1.4; }
+.standard-text {
+  font-size: 0.9rem;
+  background: rgba(47, 111, 237, 0.08);
+  border-left: 3px solid var(--blue);
+  padding: 10px 12px;
+  border-radius: 0 8px 8px 0;
+}
+.coming-soon {
+  font-size: 0.85rem;
+  color: var(--gray);
+  background: var(--bg);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+}
+
+.timer-box {
+  margin-top: 20px;
+  text-align: center;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+.timer-display { font-size: 2.2rem; font-weight: 800; font-variant-numeric: tabular-nums; margin-bottom: 10px; }
+.timer-controls { display: flex; gap: 10px; justify-content: center; }
+
+.action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+
+/* ---------------- Random Drill hero ---------------- */
+.random-hero { text-align: center; }
+.dice-emoji {
+  font-size: 3.4rem;
+  margin: 10px 0 4px;
+  display: inline-block;
+}
+.dice-emoji.dice-shaking { animation: diceShake 0.35s ease-in-out infinite; }
+@keyframes diceShake {
+  0% { transform: rotate(0deg) translateX(0); }
+  20% { transform: rotate(-14deg) translateX(-4px); }
+  40% { transform: rotate(12deg) translateX(4px); }
+  60% { transform: rotate(-10deg) translateX(-3px); }
+  80% { transform: rotate(8deg) translateX(3px); }
+  100% { transform: rotate(0deg) translateX(0); }
+}
+.pool-grid-lg {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin: 18px 0;
+}
+.pool-btn-lg {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 26px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  font-family: inherit;
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: var(--white);
+  cursor: pointer;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.12s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+.pool-btn-lg span { font-size: 1.9rem; }
+.pool-btn-lg:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent, var(--red));
+  box-shadow: 0 8px 22px color-mix(in srgb, var(--accent, var(--red)) 25%, transparent);
+}
+.pool-btn-all { grid-column: 1 / -1; flex-direction: row; justify-content: center; padding: 18px; }
+
+.reveal-wrap { margin-top: 8px; }
+.reveal-card {
+  background: var(--bg-card);
+  border: 2px solid var(--accent, var(--red));
+  border-radius: var(--radius);
+  padding: 22px 18px;
+  text-align: center;
+  box-shadow: 0 10px 28px color-mix(in srgb, var(--accent, var(--red)) 20%, transparent);
+  animation: revealIn 0.4s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+@keyframes revealIn {
+  0% { opacity: 0; transform: scale(0.85) translateY(8px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+.reveal-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gray-dim); margin-bottom: 6px; }
+.reveal-name { font-size: 1.3rem; font-weight: 800; margin-bottom: 6px; }
+.reveal-meta { font-size: 0.84rem; color: var(--gray); margin-bottom: 16px; }
+
+/* ---------------- Challenges ---------------- */
+.callout {
+  background: rgba(225, 29, 46, 0.07);
+  border: 1px solid var(--red);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  font-size: 0.82rem;
+  margin: 14px 0;
+}
+.challenge-drill-name { font-size: 1.1rem; font-weight: 800; }
+.challenge-card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  margin-bottom: 10px;
+  transition: box-shadow 0.15s ease;
+}
+.challenge-card:hover { box-shadow: var(--shadow-card); }
+.challenge-card-top { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 0.86rem; flex-wrap: wrap; }
+.vs { color: var(--red); font-size: 0.72rem; }
+.challenge-card-drill { margin-top: 6px; font-weight: 700; color: var(--blue); }
+.challenge-card-time { font-size: 0.84rem; margin-top: 4px; }
+.challenge-card-msg { font-size: 0.82rem; color: var(--gray); font-style: italic; margin-top: 6px; }
+.challenge-card-bottom { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
+.status-pill { font-size: 0.72rem; padding: 3px 10px; border-radius: 999px; text-transform: capitalize; font-weight: 700; }
+.status-pending { background: rgba(185, 121, 10, 0.14); color: var(--amber); }
+.status-accepted { background: rgba(31, 148, 87, 0.14); color: var(--green); }
+.status-declined { background: rgba(154, 156, 166, 0.14); color: var(--gray); }
+.challenge-actions { display: flex; gap: 8px; }
+
+/* ---------------- Board ---------------- */
+.filter-row { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+.filter-chip {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  color: var(--gray);
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.filter-chip:hover { border-color: var(--red); color: var(--red); }
+.filter-chip.active { background: var(--red); color: white; border-color: var(--red); }
+
+.board-list { display: flex; flex-direction: column; gap: 8px; }
+.board-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  transition: background 0.15s ease;
+}
+.board-row:hover { background: var(--bg); }
+.board-row-me { background: rgba(47, 111, 237, 0.08); border: 1px solid var(--blue); }
+.board-rank { font-weight: 800; font-size: 1rem; width: 34px; color: var(--gray); }
+.board-main { flex: 1; }
+.board-crew { font-weight: 700; font-size: 0.9rem; }
+.board-badges { font-size: 0.9rem; margin-top: 2px; }
+.board-stats { text-align: right; font-size: 0.82rem; }
+
+.activity-feed { display: flex; flex-direction: column; gap: 12px; }
+.activity-row { display: flex; gap: 10px; align-items: flex-start; }
+.activity-dot { width: 8px; height: 8px; border-radius: 999px; background: var(--red); margin-top: 6px; flex-shrink: 0; }
+.activity-text { font-size: 0.86rem; }
+.activity-time { font-size: 0.72rem; color: var(--gray-dim); }
+
+/* ---------------- Videos ---------------- */
+.search-input {
+  width: 100%;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  color: var(--white);
+  border-radius: var(--radius-sm);
+  padding: 11px 14px;
+  font-size: 0.9rem;
+  margin-bottom: 12px;
+  font-family: inherit;
+  transition: border-color 0.15s ease;
+}
+.search-input:focus { border-color: var(--blue); outline: none; }
+.video-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.video-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.12s ease;
+}
+.video-card:hover { transform: translateY(-2px); }
+.video-thumb {
+  height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--red-dark), var(--blue-dark));
+  font-size: 1.5rem;
+  color: white;
+}
+.video-card-body { padding: 10px; }
+.video-drill { font-weight: 700; font-size: 0.82rem; line-height: 1.3; }
+.video-meta { font-size: 0.72rem; color: var(--gray); margin-top: 3px; }
+.video-stats { font-size: 0.72rem; color: var(--gray-dim); margin-top: 4px; }
+
+/* ---------------- Missions / Badges ---------------- */
+.mission-row-full { margin-bottom: 14px; }
+.mission-row-full.mission-complete .mission-row-top { color: var(--green); }
+.mission-row-top { display: flex; justify-content: space-between; font-size: 0.88rem; margin-bottom: 6px; }
+
+.badge-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.badge-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  text-align: center;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.12s ease;
+}
+.badge-card:hover { transform: translateY(-2px); }
+.badge-icon { font-size: 1.8rem; margin-bottom: 6px; }
+.badge-name { font-weight: 700; font-size: 0.85rem; }
+.badge-desc { font-size: 0.72rem; color: var(--gray); margin-top: 4px; }
+
+/* ---------------- More / notifications / donate ---------------- */
+.more-list { display: flex; flex-direction: column; gap: 4px; }
+.more-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: none;
+  border: none;
+  color: var(--white);
+  padding: 12px 8px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.9rem;
+  border-radius: 8px;
+  transition: background 0.15s ease;
+}
+.more-row:hover { background: var(--bg); }
+.more-row:last-child { border-bottom: none; }
+
+.notif-row { padding: 10px 0; border-bottom: 1px solid var(--border); }
+.notif-row:last-child { border-bottom: none; }
+.notif-title { font-weight: 700; font-size: 0.86rem; }
+.notif-body { font-size: 0.8rem; color: var(--gray); margin-top: 2px; }
+.notif-unread .notif-title::before { content: "● "; color: var(--red); }
+
+.donate-panel { border-color: var(--green); margin-top: 4px; }
+.transparency { margin-top: 12px; font-size: 0.82rem; color: var(--gray); }
+.transparency summary { cursor: pointer; color: var(--green); font-weight: 600; margin-bottom: 8px; }
+
+/* ---------------- Misc ---------------- */
+.empty-state {
+  text-align: center;
+  color: var(--gray-dim);
+  padding: 40px 20px;
+  font-size: 0.9rem;
+}
+
+#toast {
+  position: fixed;
+  bottom: 88px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: #1a1a1d;
+  border: 1px solid #2a2a2d;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-size: 0.84rem;
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+  z-index: 150;
+  white-space: nowrap;
+}
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ---------------- Fire click effect ---------------- */
+.fire-burst {
+  position: fixed;
+  width: 26px;
+  height: 26px;
+  margin-left: -13px;
+  margin-top: -13px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 180, 60, 0.9) 0%, rgba(225, 29, 46, 0.6) 55%, rgba(225, 29, 46, 0) 75%);
+  pointer-events: none;
+  z-index: 9999;
+  animation: fireBurst 0.5s ease-out forwards;
+}
+@keyframes fireBurst {
+  0% { opacity: 0.9; transform: scale(0.3) translateY(0); }
+  70% { opacity: 0.5; }
+  100% { opacity: 0; transform: scale(1.6) translateY(-14px); }
+}
+
+/* ---------------- Desktop widening ---------------- */
+@media (min-width: 720px) {
+  .bottom-nav { max-width: 720px; left: 50%; transform: translateX(-50%); border-radius: var(--radius) var(--radius) 0 0; border-left: 1px solid var(--border); border-right: 1px solid var(--border); }
+}
+
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="boot-loader"><div style="font-size:2rem;">🚒</div></div>
+</div>
+<script>
+/* ============================================================
+   TFDrills — Seed / Demo Data
+   Replace with real API data when a backend is connected.
+   ============================================================ */
+
+const STATIONS = [
+  "Station 1", "Station 2", "Station 3", "Station 4", "Station 5",
+  "Station 6", "Station 7", "Station 8", "Station 9", "Station 10",
+  "Station 11", "Station 12", "Station 13", "Station 14", "Station 15",
+  "Station 16", "Station 17", "Station 18", "Station 19", "Station 20"
+];
+
+const SHIFTS = ["A Shift", "B Shift", "C Shift", "D Shift"];
+
+let _id = 1;
+const nid = () => "d" + (_id++);
+
+/* ---------------- FIRE DRILLS ---------------- */
+const FIRE_DRILLS = [
+  {
+    id: nid(), category: "fire", subcategory: "Engine Operations",
+    name: "First-Due Engine Deployment", difficulty: "Intermediate", crewSize: "4",
+    equipment: ["Engine", "200' 1¾\" preconnect", "Nozzle", "Full PPE", "SCBA"],
+    estTime: "8-10 min",
+    objectives: ["Position apparatus for effective attack", "Deploy and charge first line", "Establish water supply"],
+    steps: [
+      "Officer performs 360 size-up and calls conditions.",
+      "Driver positions engine, sets brake, engages pump.",
+      "Crew pulls and stretches preconnect to the door.",
+      "Nozzle firefighter calls for water, bleeds air, advances line.",
+      "Engineer establishes supply from hydrant within 3 minutes of arrival."
+    ],
+    standard: "Line charged and crew at the door within 90 seconds of stretch; supply established within 3 minutes."
+  },
+  {
+    id: nid(), category: "fire", subcategory: "Truck Operations",
+    name: "Aerial Ladder Throw & Climb", difficulty: "Intermediate", crewSize: "2",
+    equipment: ["Truck company apparatus", "Full PPE", "Tool of choice"],
+    estTime: "6 min",
+    objectives: ["Position apparatus", "Raise, extend, and set aerial to target", "Safely climb and descend with tool"],
+    steps: [
+      "Position and level apparatus, set outriggers.",
+      "Raise, rotate, and extend ladder to target window/roof.",
+      "Firefighter climbs with assigned tool, calls 'ladder secure'.",
+      "Perform simulated task at tip, descend under control."
+    ],
+    standard: "Ladder set and firefighter at tip within 3 minutes of apparatus stop."
+  },
+  {
+    id: nid(), category: "fire", subcategory: "Rescue",
+    name: "Vehicle Extrication — Door Removal", difficulty: "Advanced", crewSize: "4",
+    equipment: ["Hydraulic spreader/cutter", "Struts", "Hard protection", "Full PPE"],
+    estTime: "12-15 min",
+    objectives: ["Stabilize vehicle", "Remove door for patient access", "Maintain patient care throughout"],
+    steps: [
+      "Stabilize vehicle with cribbing/struts, chock wheels.",
+      "Assign patient contact firefighter before tools start.",
+      "Create purchase point, remove door using spreader/cutter.",
+      "Pad and clear sharp edges, confirm space is patient-ready."
+    ],
+    standard: "Door removed and space cleared within 10 minutes; patient contact never interrupted."
+  },
+  {
+    id: nid(), category: "fire", subcategory: "Search",
+    name: "Primary Search — Zero Visibility", difficulty: "Advanced", crewSize: "2",
+    equipment: ["Full PPE", "SCBA", "TIC (optional)", "Search rope (optional)"],
+    estTime: "5-8 min per room",
+    objectives: ["Complete right- or left-hand primary search of assigned area", "Locate and remove victim(s)", "Maintain crew integrity"],
+    steps: [
+      "Announce entry and search assignment on the radio.",
+      "Maintain wall contact, search systematically room to room.",
+      "Locate victim (mannequin), confirm responsiveness, package for removal.",
+      "Announce 'primary search complete' with results."
+    ],
+    standard: "Room searched and victim located within 3 minutes of entry; crew never separated."
+  },
+  {
+    id: nid(), category: "fire", subcategory: "Ventilation",
+    name: "Vertical Roof Ventilation", difficulty: "Advanced", crewSize: "2",
+    equipment: ["Roof ladder", "Chainsaw or axe", "Full PPE", "SCBA"],
+    estTime: "8 min",
+    objectives: ["Safely access roof", "Cut and open a 4'x4' ventilation hole", "Clear ceiling below"],
+    steps: [
+      "Sound roof before stepping off ladder, identify rafters.",
+      "Cut inspection hole to confirm conditions below.",
+      "Cut 4'x4' hole following rafter lines, remove decking.",
+      "Push ceiling material down, retreat to ladder."
+    ],
+    standard: "Hole opened and crew off the roof within 8 minutes of access."
+  },
+  {
+    id: nid(), category: "fire", subcategory: "Water Supply",
+    name: "Hydrant to Engine Supply Line", difficulty: "Beginner", crewSize: "2",
+    equipment: ["Engine", "Supply hose", "Hydrant wrench", "Gate valve"],
+    estTime: "3-5 min",
+    objectives: ["Wrap hydrant and charge supply line under 3 minutes"],
+    steps: [
+      "Firefighter dismounts with hose, wraps hydrant, signals driver.",
+      "Driver lays line to the scene, calls 'stop' at position.",
+      "Firefighter connects to hydrant, charges on officer's command.",
+      "Confirm sustained positive pressure at the pump."
+    ],
+    standard: "Supply line charged within 3 minutes of engine stopping at hydrant."
+  },
+  {
+    id: nid(), category: "fire", subcategory: "Hose Advancement",
+    name: "The Denver Drill", difficulty: "Advanced", crewSize: "3",
+    equipment: ["200' 1¾\" line", "Full PPE", "SCBA", "Obstacle props (stairs/furniture optional)"],
+    estTime: "4-6 min",
+    objectives: ["Advance a charged line up stairs and through obstacles to a target"],
+    steps: [
+      "Line stretched and charged at base of stairs.",
+      "Crew advances up stairs, flaking line to prevent kinks.",
+      "Navigate obstacle course/tight turns to simulated fire room.",
+      "Knock down target from proper stance within time standard."
+    ],
+    standard: "Target extinguished from stretch in under 4:30 (crew personal-best tracked for challenges)."
+  },
+  {
+    id: nid(), category: "fire", subcategory: "Forcible Entry",
+    name: "Irons Through the Door Prop", difficulty: "Intermediate", crewSize: "2",
+    equipment: ["Halligan", "Flathead axe", "Door forcible entry prop", "Full PPE"],
+    estTime: "3-5 min",
+    objectives: ["Force an inward-opening door using conventional method"],
+    steps: [
+      "Size up door, identify swing and lock type.",
+      "Set the halligan above/below lock, adjust angle.",
+      "Strike to set, then pry to gap and control the door.",
+      "Announce 'door forced,' maintain control on entry."
+    ],
+    standard: "Door forced within 90 seconds of first strike."
+  },
+  {
+    id: nid(), category: "fire", subcategory: "Ladders",
+    name: "Ground Ladder Throw — 24' Extension", difficulty: "Beginner", crewSize: "2",
+    equipment: ["24' extension ladder", "Full PPE"],
+    estTime: "2-3 min",
+    objectives: ["Remove, carry, raise, and secure ladder to a second-floor window"],
+    steps: [
+      "Two-firefighter carry from apparatus to building.",
+      "Foot and raise ladder using proper technique.",
+      "Extend to target, bed halyard, set at climbing angle.",
+      "Heel ladder and confirm secure before climb."
+    ],
+    standard: "Ladder set and secured at proper angle within 90 seconds."
+  },
+  {
+    id: nid(), category: "fire", subcategory: "Pump Operations",
+    name: "Pressure Governor & Relay Pumping", difficulty: "Advanced", crewSize: "1",
+    equipment: ["Engine/pump panel", "Supply/discharge lines"],
+    estTime: "10 min",
+    objectives: ["Establish and maintain correct discharge pressures across multiple lines"],
+    steps: [
+      "Engage pump, confirm water source, set primer if drafting.",
+      "Open discharges sequentially, set correct PDP for each line.",
+      "Monitor and adjust governor as lines open/close.",
+      "Demonstrate relay handoff to a second engine."
+    ],
+    standard: "Correct pressures (+/- 10 psi) maintained on all lines throughout evolution."
+  },
+  {
+    id: nid(), category: "fire", subcategory: "SCBA",
+    name: "SCBA Confidence Course & Mask Confidence", difficulty: "Intermediate", crewSize: "1",
+    equipment: ["Full PPE", "SCBA", "Confidence maze prop"],
+    estTime: "5-7 min",
+    objectives: ["Complete maze under air while managing entanglement and low-profile obstacles"],
+    steps: [
+      "Don full PPE and SCBA, confirm air and alarm check.",
+      "Enter maze, manage wire/entanglement hazard using reduced-profile technique.",
+      "Navigate low-clearance obstacle.",
+      "Exit maze and confirm remaining air supply."
+    ],
+    standard: "Course completed without mask removal or entanglement panic; air check logged."
+  },
+  {
+    id: nid(), category: "fire", subcategory: "RIT",
+    name: "RIT — Downed Firefighter Removal", difficulty: "Advanced", crewSize: "4",
+    equipment: ["Full PPE", "SCBA", "RIT bag", "Webbing/rescue harness"],
+    estTime: "10-12 min",
+    objectives: ["Locate downed firefighter, convert air, package and remove"],
+    steps: [
+      "RIT deployed on Mayday transmission, enters with RIT bag.",
+      "Locate downed firefighter, control airway/regulator first.",
+      "Convert to RIT air supply, package with webbing/drag device.",
+      "Remove to point of safety, maintaining air throughout."
+    ],
+    standard: "Firefighter located and air converted within 3 minutes of RIT entry; removal within 10 minutes total."
+  },
+  {
+    id: nid(), category: "fire", subcategory: "Mayday",
+    name: "Mayday Transmission & Self-Rescue", difficulty: "Advanced", crewSize: "1",
+    equipment: ["Full PPE", "SCBA", "Radio"],
+    estTime: "3-5 min",
+    objectives: ["Recognize emergency, transmit proper Mayday, execute self-rescue technique"],
+    steps: [
+      "Recognize entanglement/entrapment/low-air emergency.",
+      "Transmit Mayday using LUNAR format.",
+      "Activate PASS device, attempt self-extrication.",
+      "Execute emergency egress or wall breach if trained/equipped."
+    ],
+    standard: "Mayday transmitted within 10 seconds of recognized emergency; LUNAR complete and accurate."
+  },
+  {
+    id: nid(), category: "fire", subcategory: "Officer Scenarios",
+    name: "Tabletop: Single-Family Residential Fire", difficulty: "Intermediate", crewSize: "1",
+    equipment: ["Scenario cards/whiteboard"],
+    estTime: "15 min",
+    objectives: ["Size up scenario, give initial radio report, assign first-arriving companies"],
+    steps: [
+      "Review scenario photo/description (smoke showing, occupants reported).",
+      "Deliver a complete initial radio report.",
+      "Assign tasks to first-due engine, truck, and second-due units.",
+      "Adjust strategy as scenario conditions change (evaluator injects)."
+    ],
+    standard: "Complete, correct initial report given within 30 seconds; sound strategy maintained through injects."
+  }
+];
+
+/* ---------------- EMS DRILLS ---------------- */
+const EMS_DRILLS = [
+  {
+    id: nid(), category: "ems", subcategory: "Cardiac",
+    name: "High-Performance CPR & AED", difficulty: "Intermediate", crewSize: "4",
+    equipment: ["Mannequin", "AED trainer", "BVM"],
+    estTime: "6-8 min",
+    objectives: ["Deliver high-performance CPR with minimal interruptions and correct pit-crew rotation"],
+    steps: [
+      "First responder confirms unresponsive/no pulse, begins compressions.",
+      "Second rescuer applies AED, analyzes, shocks if advised.",
+      "Rotate compressors every 2 minutes without pausing >5 seconds.",
+      "Integrate airway management and IV/IO access without interrupting compressions."
+    ],
+    standard: "Chest compression fraction ≥ 80%; rotations under 5-second pause."
+  },
+  {
+    id: nid(), category: "ems", subcategory: "Airway",
+    name: "Advanced Airway — Supraglottic & Confirmation", difficulty: "Advanced", crewSize: "2",
+    equipment: ["Airway mannequin", "SGA device", "Capnography", "BVM"],
+    estTime: "5 min",
+    objectives: ["Place supraglottic airway and confirm placement with waveform capnography"],
+    steps: [
+      "Preoxygenate patient with BVM.",
+      "Select and insert appropriately sized SGA device.",
+      "Confirm placement with capnography waveform and breath sounds.",
+      "Secure device and reassess after any patient movement."
+    ],
+    standard: "Airway placed and confirmed within 2 attempts / 60 seconds each."
+  },
+  {
+    id: nid(), category: "ems", subcategory: "Trauma",
+    name: "Tourniquet & Hemorrhage Control", difficulty: "Beginner", crewSize: "1",
+    equipment: ["Trauma mannequin/limb", "CAT tourniquet", "Hemostatic gauze"],
+    estTime: "2 min",
+    objectives: ["Control life-threatening hemorrhage within 60 seconds"],
+    steps: [
+      "Identify life threat, expose injury.",
+      "Apply tourniquet 2-3 inches above wound, high and tight.",
+      "Tighten until bleeding stops and pulse is eliminated distally.",
+      "Note time of application, reassess."
+    ],
+    standard: "Bleeding controlled within 60 seconds of hands-on patient."
+  },
+  {
+    id: nid(), category: "ems", subcategory: "Medical",
+    name: "Stroke Recognition & Transport Decision", difficulty: "Intermediate", crewSize: "2",
+    equipment: ["Scenario mannequin/actor", "Cincinnati stroke scale card", "Glucometer"],
+    estTime: "8 min",
+    objectives: ["Correctly identify stroke signs, determine last known well, choose destination"],
+    steps: [
+      "Perform Cincinnati Prehospital Stroke Scale.",
+      "Check blood glucose to rule out hypoglycemia.",
+      "Determine exact last known well time from bystanders.",
+      "Make correct stroke-center transport decision and pre-notify."
+    ],
+    standard: "Complete stroke assessment and correct destination decision within 8 minutes on scene."
+  },
+  {
+    id: nid(), category: "ems", subcategory: "Pediatrics",
+    name: "Pediatric Respiratory Distress", difficulty: "Advanced", crewSize: "2",
+    equipment: ["Pediatric mannequin", "Broselow tape", "BVM (pediatric)"],
+    estTime: "6 min",
+    objectives: ["Correctly size equipment and manage pediatric airway/breathing emergency"],
+    steps: [
+      "Use Broselow tape for weight-based sizing.",
+      "Perform pediatric assessment triangle.",
+      "Manage airway/breathing with appropriately sized equipment.",
+      "Calculate and confirm correct medication dosing if indicated."
+    ],
+    standard: "Correct sizing and dosing on first attempt; no equipment mismatch errors."
+  },
+  {
+    id: nid(), category: "ems", subcategory: "OB",
+    name: "Emergency Field Delivery", difficulty: "Advanced", crewSize: "2",
+    equipment: ["OB mannequin/kit", "OB delivery kit"],
+    estTime: "10 min",
+    objectives: ["Manage an imminent field delivery and initial newborn care"],
+    steps: [
+      "Assess for crowning and imminent delivery.",
+      "Prepare OB kit, position mother, support delivery.",
+      "Clear airway, dry/stimulate/warm newborn, assess APGAR.",
+      "Deliver placenta, monitor for postpartum hemorrhage."
+    ],
+    standard: "Newborn assessed and warmed within 60 seconds of delivery; APGAR documented at 1 and 5 min."
+  },
+  {
+    id: nid(), category: "ems", subcategory: "Pharmacology",
+    name: "Medication Dosage & Push Rate Drill", difficulty: "Intermediate", crewSize: "1",
+    equipment: ["Med cards/scenario sheets", "Practice syringes (no needles)"],
+    estTime: "10 min",
+    objectives: ["Correctly calculate weight-based dosing and demonstrate proper administration rate"],
+    steps: [
+      "Read scenario vitals and patient weight.",
+      "Calculate correct dose/volume for indicated medication.",
+      "State the 5 rights aloud before administration.",
+      "Demonstrate correct push rate/dilution where applicable."
+    ],
+    standard: "Zero dosage calculation errors across all scenario cards."
+  },
+  {
+    id: nid(), category: "ems", subcategory: "Equipment Checks",
+    name: "Full Rig & Airway Bag Inventory", difficulty: "Beginner", crewSize: "1",
+    equipment: ["Ambulance/rig", "Checklist"],
+    estTime: "15 min",
+    objectives: ["Complete full inventory and function check of medical equipment/supplies"],
+    steps: [
+      "Check monitor/defib battery and pads expiration.",
+      "Verify airway bag contents against checklist.",
+      "Confirm O2 tank levels and function.",
+      "Log and report any deficiencies for restock."
+    ],
+    standard: "Checklist 100% complete with all deficiencies logged."
+  },
+  {
+    id: nid(), category: "ems", subcategory: "Mega Codes",
+    name: "Full Cardiac Arrest Mega Code", difficulty: "Advanced", crewSize: "4",
+    equipment: ["Mannequin", "AED/monitor trainer", "Full ALS bag"],
+    estTime: "15-20 min",
+    objectives: ["Run a complete ACLS cardiac arrest scenario with correct algorithm and team roles"],
+    steps: [
+      "Assign team leader, compressor, airway, and medication roles.",
+      "Run rhythm checks and shocks per algorithm.",
+      "Administer correct medications at correct intervals.",
+      "Debrief roles, timing, and communication after the code."
+    ],
+    standard: "Algorithm followed correctly with no missed rhythm check or medication interval."
+  },
+  {
+    id: nid(), category: "ems", subcategory: "Mass Casualty",
+    name: "START Triage — Multi-Patient Scenario", difficulty: "Advanced", crewSize: "4",
+    equipment: ["Triage tags", "Multiple mannequins/role players"],
+    estTime: "20 min",
+    objectives: ["Correctly triage 6-10 patients using START methodology under time pressure"],
+    steps: [
+      "Announce MCI and request appropriate resources.",
+      "Begin systematic START triage, tagging each patient.",
+      "Communicate patient count/category to incident command.",
+      "Coordinate transport priority based on triage results."
+    ],
+    standard: "All patients triaged and tagged within 15 minutes; no mis-triage of red-tag patients."
+  }
+];
+
+/* ---------------- FITNESS WORKOUTS ---------------- */
+const FITNESS_WORKOUTS = [
+  {
+    id: nid(), category: "fitness", subcategory: "Strength",
+    name: "Firefighter Push/Pull Strength", difficulty: "Intermediate", crewSize: "1+",
+    equipment: ["Barbell or dumbbells", "Pull-up bar"],
+    estTime: "45 min",
+    objectives: ["Build the push/pull/carry strength used in forcible entry and victim drags"],
+    steps: ["5 x 5 bench or push press", "5 x 5 weighted pull-ups or rows", "3 x 10 farmer carries (heavy)", "3 x 12 sled push or push-ups to finish"],
+    standard: "Complete all sets at prescribed load with good form.",
+    why: "Directly builds the pushing/pulling power needed for forcible entry, hose advancement, and hauling equipment."
+  },
+  {
+    id: nid(), category: "fitness", subcategory: "Functional Firefighter",
+    name: "Stair Climb & Hose Drag Circuit", difficulty: "Advanced", crewSize: "1+",
+    equipment: ["Stairwell or step platform", "Hose bundle or sandbag", "SCBA (optional)"],
+    estTime: "30 min",
+    objectives: ["Simulate high-rise operations under load"],
+    steps: ["5 rounds: 3 flights stair climb with hose bundle", "20 sandbag get-ups", "30-sec plank hold", "2 min rest between rounds"],
+    standard: "Complete 5 rounds maintaining consistent pace round to round.",
+    why: "Mirrors the combined cardiovascular and load-bearing demand of high-rise or wildland operations."
+  },
+  {
+    id: nid(), category: "fitness", subcategory: "Cardio",
+    name: "SCBA-Pace Interval Run", difficulty: "Intermediate", crewSize: "1+",
+    equipment: ["Track or treadmill"],
+    estTime: "25 min",
+    objectives: ["Build the aerobic base needed for sustained work-rest cycles on air"],
+    steps: ["5 min warm-up jog", "6 x 400m at hard pace, 90-sec walk rest", "5 min cool-down"],
+    standard: "Hold intervals within 5 seconds of each other across all 6 reps.",
+    why: "Aerobic capacity extends air time and speeds recovery between rehab cycles."
+  },
+  {
+    id: nid(), category: "fitness", subcategory: "HIIT",
+    name: "Mayday Response HIIT", difficulty: "Advanced", crewSize: "1+",
+    equipment: ["Kettlebell", "Jump rope or box"],
+    estTime: "20 min",
+    objectives: ["Train the short, maximal-effort bursts required in a Mayday or rescue event"],
+    steps: ["8 rounds: 20 sec kettlebell swings, 10 sec rest", "8 rounds: 20 sec burpees, 10 sec rest", "8 rounds: 20 sec box jumps, 10 sec rest"],
+    standard: "Maintain max effort every round; note any drop-off round to round.",
+    why: "Builds the anaerobic power needed for sudden, all-out rescue efforts."
+  },
+  {
+    id: nid(), category: "fitness", subcategory: "Endurance",
+    name: "Wildland Ruck", difficulty: "Intermediate", crewSize: "1+",
+    equipment: ["Weighted ruck/pack (25-45 lb)", "Trail or road route"],
+    estTime: "60 min",
+    objectives: ["Build the muscular and cardiovascular endurance for extended wildland/EMS shifts"],
+    steps: ["60-minute ruck at a sustainable pace on varied terrain", "Maintain upright posture and steady breathing throughout"],
+    standard: "Complete distance without stopping; track pace over time for progression.",
+    why: "Builds durable, low-impact endurance that carries over to long incidents and mutual aid deployments."
+  },
+  {
+    id: nid(), category: "fitness", subcategory: "Mobility",
+    name: "Turnout Gear Mobility Flow", difficulty: "Beginner", crewSize: "1+",
+    equipment: ["None"],
+    estTime: "15 min",
+    objectives: ["Restore hip, shoulder, and thoracic mobility restricted by PPE and apparatus seating"],
+    steps: ["World's greatest stretch x 5/side", "Thoracic rotations x 10/side", "90/90 hip switches x 10/side", "Shoulder dislocates with band x 15"],
+    standard: "Move through full flow with controlled breathing, no rushing.",
+    why: "Keeps joints healthy despite hours in bunker gear and tight apparatus cabs."
+  },
+  {
+    id: nid(), category: "fitness", subcategory: "No Equipment",
+    name: "Bodyweight Station Workout", difficulty: "Beginner", crewSize: "1+",
+    equipment: ["None"],
+    estTime: "20 min",
+    objectives: ["Maintain conditioning with zero equipment, ideal for station bays"],
+    steps: ["4 rounds: 20 push-ups, 20 air squats, 20 sit-ups, 10 burpees", "Rest 1 min between rounds"],
+    standard: "Complete all 4 rounds under 20 minutes total.",
+    why: "No-excuse workout that keeps a crew ready even with zero gear on hand."
+  },
+  {
+    id: nid(), category: "fitness", subcategory: "Recovery",
+    name: "Post-Incident Recovery Session", difficulty: "Beginner", crewSize: "1+",
+    equipment: ["Foam roller (optional)"],
+    estTime: "15 min",
+    objectives: ["Aid recovery and reduce injury risk after a physically demanding call or shift"],
+    steps: ["5 min easy walk to bring heart rate down", "Foam roll major muscle groups, 1 min each", "5 min static stretching, focus on hips/back/shoulders"],
+    standard: "Full session completed within 2 hours of strenuous activity.",
+    why: "Active recovery reduces soreness and cumulative injury risk across a career."
+  }
+];
+
+const ALL_DRILLS = [...FIRE_DRILLS, ...EMS_DRILLS, ...FITNESS_WORKOUTS];
+
+/* ---------------- BADGES ---------------- */
+const BADGES = [
+  { id: "hose-beast", name: "Hose Beast", desc: "Complete 10 hose advancement drills.", icon: "🧯" },
+  { id: "ems-guru", name: "EMS Guru", desc: "Complete 10 EMS drills.", icon: "🩺" },
+  { id: "search-master", name: "Search Master", desc: "Complete 10 search drills.", icon: "🔦" },
+  { id: "ladder-king", name: "Ladder King", desc: "Complete 10 ladder drills.", icon: "🪜" },
+  { id: "pump-wizard", name: "Pump Wizard", desc: "Complete 10 pump operations drills.", icon: "🚰" },
+  { id: "airway-ace", name: "Airway Ace", desc: "Complete 10 airway drills.", icon: "💨" },
+  { id: "rit-ready", name: "RIT Ready", desc: "Complete 5 RIT drills.", icon: "🛟" },
+  { id: "iron-crew", name: "Iron Crew", desc: "Complete 5 crew fitness workouts together.", icon: "💪" },
+  { id: "consistency", name: "Consistency Award", desc: "Log drills 4 weeks in a row.", icon: "📆" },
+  { id: "streak-30", name: "30-Day Streak", desc: "Train 30 days in a row.", icon: "🔥" },
+  { id: "dept-champion", name: "Department Champion", desc: "Reach #1 on the Overall Challenge Board.", icon: "🏆" }
+];
+
+/* ---------------- MOCK CREW LEADERBOARD ---------------- */
+const CREWS = [
+  { station: "Station 17", shift: "A Shift", wins: 14, losses: 3, streak: 5, rank: 1, videos: 22, badges: ["hose-beast","iron-crew","streak-30"] },
+  { station: "Station 8", shift: "B Shift", wins: 12, losses: 4, streak: 2, rank: 2, videos: 18, badges: ["ems-guru","consistency"] },
+  { station: "Station 5", shift: "C Shift", wins: 11, losses: 6, streak: 0, rank: 3, videos: 15, badges: ["search-master"] },
+  { station: "Station 12", shift: "A Shift", wins: 10, losses: 5, streak: 3, rank: 4, videos: 14, badges: ["pump-wizard"] },
+  { station: "Station 3", shift: "B Shift", wins: 9, losses: 7, streak: 5, rank: 5, videos: 11, badges: ["iron-crew"] },
+  { station: "Station 7", shift: "A Shift", wins: 8, losses: 5, streak: 1, rank: 6, videos: 9, badges: ["iron-crew"] },
+  { station: "Station 20", shift: "D Shift", wins: 7, losses: 8, streak: 0, rank: 7, videos: 8, badges: [] },
+  { station: "Station 9", shift: "C Shift", wins: 6, losses: 9, streak: 0, rank: 8, videos: 6, badges: [] }
+];
+
+/* ---------------- MOCK ACTIVITY FEED ---------------- */
+const ACTIVITY_FEED = [
+  { text: "Station 8 B Shift completed Denver Drill in 4:11.", time: "12 min ago" },
+  { text: "Station 5 C Shift accepted Station 17 A Shift's challenge.", time: "38 min ago" },
+  { text: "Station 12 A Shift set a new Hose Advancement record.", time: "1 hr ago" },
+  { text: "Station 7 A Shift earned the Iron Crew badge.", time: "3 hr ago" },
+  { text: "Station 3 B Shift has won five straight challenges.", time: "5 hr ago" },
+  { text: "Station 17 A Shift completed High-Performance CPR & AED.", time: "yesterday" },
+  { text: "Station 9 C Shift logged a Wildland Ruck workout.", time: "yesterday" }
+];
+
+/* ---------------- MOCK VIDEO LIBRARY ---------------- */
+const VIDEOS = [
+  { id: "v1", drill: "The Denver Drill", station: "Station 17", shift: "A Shift", time: "4:18", views: 142, rating: 4.8 },
+  { id: "v2", drill: "The Denver Drill", station: "Station 8", shift: "B Shift", time: "4:11", views: 98, rating: 4.9 },
+  { id: "v3", drill: "Vehicle Extrication — Door Removal", station: "Station 5", shift: "C Shift", time: "9:42", views: 61, rating: 4.5 },
+  { id: "v4", drill: "High-Performance CPR & AED", station: "Station 17", shift: "A Shift", time: "n/a", views: 205, rating: 4.9 },
+  { id: "v5", drill: "RIT — Downed Firefighter Removal", station: "Station 12", shift: "A Shift", time: "8:55", views: 77, rating: 4.7 },
+  { id: "v6", drill: "Aerial Ladder Throw & Climb", station: "Station 3", shift: "B Shift", time: "2:48", views: 54, rating: 4.4 }
+];
+
+/* ---------------- WEEKLY MISSIONS TEMPLATE ---------------- */
+const WEEKLY_MISSION_TEMPLATE = [
+  { id: "m1", label: "Complete 3 Fire Drills", target: 3, category: "fire" },
+  { id: "m2", label: "Complete 2 EMS Drills", target: 2, category: "ems" },
+  { id: "m3", label: "Complete 1 Crew Workout", target: 1, category: "fitness" }
+];
+/* ============================================================
+   TFDrills — Local persistence layer (localStorage)
+   This is a frontend-only prototype. Swap these functions for
+   real API calls once a backend is connected — the rest of the
+   app only talks to Store, never to localStorage directly.
+   ============================================================ */
+
+const Store = (() => {
+  const KEYS = {
+    PROFILE: "tfd_profile",
+    FAVORITES: "tfd_favorites",
+    CHALLENGES: "tfd_challenges",
+    NOTIFICATIONS: "tfd_notifications",
+    RESULTS: "tfd_results",
+    MISSIONS: "tfd_missions",
+    MISSION_WEEK: "tfd_mission_week",
+    SEEDED: "tfd_seeded"
+  };
+
+  function read(key, fallback) {
+    try {
+      const raw = localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : fallback;
+    } catch (e) {
+      return fallback;
+    }
+  }
+  function write(key, value) {
+    localStorage.setItem(key, JSON.stringify(value));
+  }
+
+  /* ---------- Profile ---------- */
+  function getProfile() {
+    return read(KEYS.PROFILE, null);
+  }
+  function setProfile(profile) {
+    write(KEYS.PROFILE, profile);
+  }
+  function isOnboarded() {
+    const p = getProfile();
+    return !!(p && p.station && p.shift);
+  }
+
+  /* ---------- Favorites ---------- */
+  function getFavorites() {
+    return read(KEYS.FAVORITES, []);
+  }
+  function isFavorite(drillId) {
+    return getFavorites().includes(drillId);
+  }
+  function toggleFavorite(drillId) {
+    const favs = getFavorites();
+    const idx = favs.indexOf(drillId);
+    if (idx >= 0) favs.splice(idx, 1);
+    else favs.push(drillId);
+    write(KEYS.FAVORITES, favs);
+    return favs.includes(drillId);
+  }
+
+  /* ---------- Results (completed drills, for missions/badges) ---------- */
+  function getResults() {
+    return read(KEYS.RESULTS, []);
+  }
+  function addResult(result) {
+    const results = getResults();
+    results.unshift({ ...result, ts: Date.now() });
+    write(KEYS.RESULTS, results);
+    bumpMissionProgress(result.category);
+    return results;
+  }
+
+  /* ---------- Challenges ---------- */
+  function getChallenges() {
+    return read(KEYS.CHALLENGES, seedChallenges());
+  }
+  function addChallenge(challenge) {
+    const list = getChallenges();
+    const withId = { ...challenge, id: "c" + Date.now(), createdAt: Date.now(), status: "pending" };
+    list.unshift(withId);
+    write(KEYS.CHALLENGES, list);
+    addNotification({
+      title: "Challenge Sent",
+      body: `You challenged ${challenge.toStation} ${challenge.toShift} to ${challenge.drillName}.`
+    });
+    return withId;
+  }
+  function respondChallenge(id, status) {
+    const list = getChallenges();
+    const c = list.find(c => c.id === id);
+    if (c) c.status = status;
+    write(KEYS.CHALLENGES, list);
+    return c;
+  }
+  function seedChallenges() {
+    const seeded = [
+      {
+        id: "seed1", fromStation: "Station 17", fromShift: "A Shift",
+        toStation: "Station 5", toShift: "C Shift",
+        drillName: "The Denver Drill", timeToBeat: "4:18",
+        message: "We think you can beat this.", status: "pending",
+        createdAt: Date.now() - 1000 * 60 * 60 * 3
+      },
+      {
+        id: "seed2", fromStation: "Station 8", fromShift: "B Shift",
+        toStation: "Station 12", toShift: "A Shift",
+        drillName: "High-Performance CPR & AED", timeToBeat: "Score: 96%",
+        message: "Beat our compression fraction!", status: "accepted",
+        createdAt: Date.now() - 1000 * 60 * 60 * 24
+      }
+    ];
+    write(KEYS.CHALLENGES, seeded);
+    return seeded;
+  }
+
+  /* ---------- Notifications ---------- */
+  function getNotifications() {
+    return read(KEYS.NOTIFICATIONS, []);
+  }
+  function addNotification(notif) {
+    const list = getNotifications();
+    list.unshift({ ...notif, id: "n" + Date.now(), ts: Date.now(), read: false });
+    write(KEYS.NOTIFICATIONS, list);
+  }
+  function unreadCount() {
+    return getNotifications().filter(n => !n.read).length;
+  }
+  function markAllRead() {
+    const list = getNotifications().map(n => ({ ...n, read: true }));
+    write(KEYS.NOTIFICATIONS, list);
+  }
+
+  /* ---------- Weekly Missions ---------- */
+  function currentWeekKey() {
+    const d = new Date();
+    const onejan = new Date(d.getFullYear(), 0, 1);
+    const week = Math.ceil((((d - onejan) / 86400000) + onejan.getDay() + 1) / 7);
+    return `${d.getFullYear()}-W${week}`;
+  }
+  function getMissionProgress() {
+    const wk = currentWeekKey();
+    const stored = read(KEYS.MISSION_WEEK, null);
+    if (stored !== wk) {
+      const fresh = {};
+      WEEKLY_MISSION_TEMPLATE.forEach(m => (fresh[m.id] = 0));
+      write(KEYS.MISSIONS, fresh);
+      write(KEYS.MISSION_WEEK, wk);
+      return fresh;
+    }
+    return read(KEYS.MISSIONS, {});
+  }
+  function bumpMissionProgress(category) {
+    const progress = getMissionProgress();
+    WEEKLY_MISSION_TEMPLATE.forEach(m => {
+      if (m.category === category) {
+        progress[m.id] = Math.min((progress[m.id] || 0) + 1, m.target);
+      }
+    });
+    write(KEYS.MISSIONS, progress);
+  }
+
+  return {
+    getProfile, setProfile, isOnboarded,
+    getFavorites, isFavorite, toggleFavorite,
+    getResults, addResult,
+    getChallenges, addChallenge, respondChallenge,
+    getNotifications, addNotification, unreadCount, markAllRead,
+    getMissionProgress
+  };
+})();
+/* ============================================================
+   View: The Challenge Board (leaderboard) + Activity Feed
+   ============================================================ */
+
+window.Views = window.Views || {};
+
+let _boardFilter = "overall";
+let _boardScope = "all-time";
+
+Views.board = function () {
+  const profile = Store.getProfile();
+  const ranked = [...CREWS].sort((a, b) => a.rank - b.rank);
+
+  return `
+    <section>
+      <div class="page-header"><h2>🏆 The Challenge Board</h2></div>
+
+      <div class="filter-row">
+        ${["overall", "fire", "ems", "fitness"].map(f => `
+          <button class="filter-chip ${_boardFilter === f ? "active" : ""}" onclick="Views.setBoardFilter('${f}')">${f[0].toUpperCase() + f.slice(1)}</button>
+        `).join("")}
+      </div>
+      <div class="filter-row">
+        ${["monthly", "all-time"].map(s => `
+          <button class="filter-chip ${_boardScope === s ? "active" : ""}" onclick="Views.setBoardScope('${s}')">${s === "all-time" ? "All-Time" : "Monthly"}</button>
+        `).join("")}
+      </div>
+
+      <div class="panel">
+        <div class="board-list">
+          ${ranked.map(c => boardRowHtml(c, profile)).join("")}
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Live Department Activity</h3>
+        <div class="activity-feed">
+          ${ACTIVITY_FEED.map(a => `
+            <div class="activity-row">
+              <span class="activity-dot"></span>
+              <div>
+                <div class="activity-text">${App.esc(a.text)}</div>
+                <div class="activity-time">${App.esc(a.time)}</div>
+              </div>
+            </div>`).join("")}
+        </div>
+      </div>
+    </section>
+  `;
+};
+
+function boardRowHtml(c, profile) {
+  const isMe = profile && c.station === profile.station && c.shift === profile.shift;
+  return `
+    <div class="board-row ${isMe ? "board-row-me" : ""}">
+      <div class="board-rank">#${c.rank}</div>
+      <div class="board-main">
+        <div class="board-crew">${App.esc(c.station)} <span class="subtle">${App.esc(c.shift)}</span></div>
+        <div class="board-badges">${c.badges.map(b => badgeIcon(b)).join(" ")}</div>
+      </div>
+      <div class="board-stats">
+        <div>${c.wins}W - ${c.losses}L</div>
+        <div class="subtle">${c.streak > 0 ? "🔥 " + c.streak + " streak" : "—"}</div>
+      </div>
+    </div>`;
+}
+
+function badgeIcon(id) {
+  const b = BADGES.find(b => b.id === id);
+  return b ? `<span title="${App.esc(b.name)}">${b.icon}</span>` : "";
+}
+
+Views.setBoardFilter = function (f) {
+  _boardFilter = f;
+  App.render();
+};
+Views.setBoardScope = function (s) {
+  _boardScope = s;
+  App.render();
+};
+/* ============================================================
+   View: Challenge creation, list, notifications
+   ============================================================ */
+
+window.Views = window.Views || {};
+
+Views.challengeNew = function (drillId) {
+  const d = findDrill(drillId);
+  const profile = Store.getProfile();
+  if (!d) return `<div class="empty-state">Drill not found.</div>`;
+
+  return `
+    <section>
+      <div class="page-header">
+        <button class="back-btn" onclick="history.back()">&larr;</button>
+        <h2>⚔️ Challenge a Crew</h2>
+      </div>
+
+      <div class="panel">
+        <div class="challenge-drill-name">${App.esc(d.name)}</div>
+        <p class="subtle">From ${App.esc(profile.station)} ${App.esc(profile.shift)}</p>
+
+        <form onsubmit="Views.submitChallenge(event, '${d.id}')">
+          <label class="field">
+            <span>Challenge Station</span>
+            <select name="toStation" required>
+              <option value="" disabled selected>Select a station</option>
+              ${STATIONS.filter(s => s !== profile.station).map(s => `<option value="${App.esc(s)}">${s}</option>`).join("")}
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Challenge Shift</span>
+            <select name="toShift" required>
+              <option value="" disabled selected>Select a shift</option>
+              ${SHIFTS.map(s => `<option value="${App.esc(s)}">${s}</option>`).join("")}
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Time / Score to Beat</span>
+            <input type="text" name="timeToBeat" placeholder="e.g. 4:18" required />
+          </label>
+
+          <label class="field">
+            <span>Optional Message</span>
+            <textarea name="message" rows="3" placeholder="We think you can beat this."></textarea>
+          </label>
+
+          <div class="callout">
+            <strong>Challenge Rules:</strong> one continuous video, no edits, entire drill shown,
+            timer visible or built into the app.
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block">Send Challenge</button>
+        </form>
+      </div>
+    </section>
+  `;
+};
+
+Views.submitChallenge = function (event, drillId) {
+  event.preventDefault();
+  const profile = Store.getProfile();
+  const data = new FormData(event.target);
+  const d = findDrill(drillId);
+
+  Store.addChallenge({
+    fromStation: profile.station,
+    fromShift: profile.shift,
+    toStation: data.get("toStation"),
+    toShift: data.get("toShift"),
+    drillName: d.name,
+    timeToBeat: data.get("timeToBeat"),
+    message: data.get("message") || ""
+  });
+
+  App.toast("Challenge sent!");
+  App.navigate("challenges");
+};
+
+Views.challenges = function () {
+  const profile = Store.getProfile();
+  const all = Store.getChallenges();
+  const received = all.filter(c => c.toStation === profile.station && c.toShift === profile.shift);
+  const sent = all.filter(c => c.fromStation === profile.station && c.fromShift === profile.shift);
+  const others = all.filter(c => !received.includes(c) && !sent.includes(c));
+
+  return `
+    <section>
+      <div class="page-header">
+        <h2>⚔️ Challenge a Crew</h2>
+      </div>
+
+      <div class="panel">
+        <h3>🚨 Received</h3>
+        ${received.length ? received.map(c => challengeCardHtml(c, true)).join("") : `<p class="subtle">No challenges waiting on you.</p>`}
+      </div>
+
+      <div class="panel">
+        <h3>Sent by You</h3>
+        ${sent.length ? sent.map(c => challengeCardHtml(c, false)).join("") : `<p class="subtle">You haven't sent any challenges yet.</p>`}
+      </div>
+
+      <div class="panel">
+        <h3>Department-Wide</h3>
+        ${others.map(c => challengeCardHtml(c, false)).join("")}
+      </div>
+    </section>
+  `;
+};
+
+function challengeCardHtml(c, allowAccept) {
+  const statusClass = c.status === "pending" ? "status-pending" : c.status === "accepted" ? "status-accepted" : "status-declined";
+  return `
+    <div class="challenge-card">
+      <div class="challenge-card-top">
+        <span>${App.esc(c.fromStation)} ${App.esc(c.fromShift)}</span>
+        <span class="vs">vs</span>
+        <span>${App.esc(c.toStation)} ${App.esc(c.toShift)}</span>
+      </div>
+      <div class="challenge-card-drill">${App.esc(c.drillName)}</div>
+      <div class="challenge-card-time">Time / Score to Beat: <strong>${App.esc(c.timeToBeat)}</strong></div>
+      ${c.message ? `<div class="challenge-card-msg">"${App.esc(c.message)}"</div>` : ""}
+      <div class="challenge-card-bottom">
+        <span class="status-pill ${statusClass}">${c.status}</span>
+        ${allowAccept && c.status === "pending" ? `
+          <div class="challenge-actions">
+            <button class="btn btn-sm btn-primary" onclick="Views.respondChallenge('${c.id}', 'accepted')">Accept</button>
+            <button class="btn btn-sm btn-ghost" onclick="Views.respondChallenge('${c.id}', 'declined')">Decline</button>
+          </div>` : ""}
+      </div>
+    </div>`;
+}
+
+Views.respondChallenge = function (id, status) {
+  Store.respondChallenge(id, status);
+  App.toast(status === "accepted" ? "Challenge accepted — good luck!" : "Challenge declined");
+  App.render();
+};
+/* ============================================================
+   View: Drill categories, list, detail, random, timer, share
+   ============================================================ */
+
+window.Views = window.Views || {};
+
+const CATEGORY_META = {
+  fire: { label: "Fire Drills", icon: "🚒", accent: "#e11d2e" },
+  ems: { label: "EMS Drills", icon: "🚑", accent: "#dc2626" },
+  fitness: { label: "Crew Fitness", icon: "💪", accent: "#16a34a" }
+};
+
+function drillsByCategory(cat) {
+  return ALL_DRILLS.filter(d => d.category === cat);
+}
+function findDrill(id) {
+  return ALL_DRILLS.find(d => d.id === id);
+}
+
+/* ---------- Drills picker popup (Fire / EMS / Fitness) ---------- */
+Views.openDrillsPicker = function () {
+  Views.closeDrillsPicker();
+  const el = document.createElement("div");
+  el.id = "drills-picker-overlay";
+  el.className = "modal-backdrop";
+  el.innerHTML = `
+    <div class="picker-sheet">
+      <h3>🧰 Choose a drill type</h3>
+      ${Object.entries(CATEGORY_META).map(([key, meta]) => `
+        <button class="picker-option" style="--accent:${meta.accent}" onclick="Views.closeDrillsPicker(); App.navigate('drills/${key}')">
+          <span class="picker-icon">${meta.icon}</span>
+          <span>${meta.label}</span>
+        </button>
+      `).join("")}
+      <button class="picker-close" onclick="Views.closeDrillsPicker()">Cancel</button>
+    </div>
+  `;
+  el.addEventListener("click", (e) => { if (e.target === el) Views.closeDrillsPicker(); });
+  document.body.appendChild(el);
+};
+
+Views.closeDrillsPicker = function () {
+  const el = document.getElementById("drills-picker-overlay");
+  if (el) el.remove();
+};
+
+Views.drillList = function (category) {
+  const meta = CATEGORY_META[category];
+  const drills = drillsByCategory(category);
+  const subcats = [...new Set(drills.map(d => d.subcategory))];
+
+  return `
+    <section>
+      <div class="page-header">
+        <button class="back-btn" onclick="App.navigate('home')">&larr;</button>
+        <h2>${meta.icon} ${meta.label}</h2>
+      </div>
+
+      ${subcats.map(sub => `
+        <div class="panel">
+          <h3 class="subcat-title">${App.esc(sub)}</h3>
+          <div class="drill-list">
+            ${drills.filter(d => d.subcategory === sub).map(d => drillRowHtml(d)).join("")}
+          </div>
+        </div>
+      `).join("")}
+    </section>
+  `;
+};
+
+function drillRowHtml(d) {
+  const fav = Store.isFavorite(d.id);
+  return `
+    <div class="drill-row" onclick="App.navigate('drill/${d.id}')">
+      <div class="drill-row-main">
+        <div class="drill-row-name">${App.esc(d.name)}</div>
+        <div class="drill-row-meta">${App.esc(d.difficulty)} · Crew of ${App.esc(d.crewSize)} · ${App.esc(d.estTime)}</div>
+      </div>
+      <span class="fav-star ${fav ? "active" : ""}" onclick="event.stopPropagation(); Views.toggleFav('${d.id}')">${fav ? "★" : "☆"}</span>
+    </div>`;
+}
+
+Views.toggleFav = function (id) {
+  const active = Store.toggleFavorite(id);
+  App.toast(active ? "Added to favorites" : "Removed from favorites");
+  App.render();
+};
+
+/* ---------- Random Drill: hero pool picker -> dice shake -> reveal ---------- */
+const RANDOM_POOLS = [
+  { key: "fire", icon: "🚒", label: "Fire", accent: "#e11d2e" },
+  { key: "ems", icon: "🚑", label: "EMS", accent: "#dc2626" },
+  { key: "fitness", icon: "💪", label: "Fitness", accent: "#16a34a" },
+  { key: "all", icon: "🎲", label: "All Drills", accent: "#2f6fed" }
+];
+
+Views.random = function () {
+  return `
+    <section class="random-hero">
+      <div class="page-header">
+        <button class="back-btn" onclick="App.navigate('home')">&larr;</button>
+        <h2>Random Drill</h2>
+      </div>
+      <div class="dice-emoji" id="dice-emoji">🎲</div>
+      <p class="subtle">Pick a pool and let TFDrills choose your next drill.</p>
+      <div class="pool-grid-lg">
+        ${RANDOM_POOLS.map(p => `
+          <button class="pool-btn-lg ${p.key === "all" ? "pool-btn-all" : ""}" style="--accent:${p.accent}" onclick="Views.rollRandom('${p.key}')">
+            <span>${p.icon}</span>${p.label}
+          </button>
+        `).join("")}
+      </div>
+      <div id="random-result"></div>
+    </section>
+  `;
+};
+
+Views.rollRandom = function (pool) {
+  const list = pool === "all" ? ALL_DRILLS : drillsByCategory(pool);
+  const pick = list[Math.floor(Math.random() * list.length)];
+  const dice = document.getElementById("dice-emoji");
+  const resultEl = document.getElementById("random-result");
+  if (!dice || !resultEl) return;
+
+  resultEl.innerHTML = "";
+  dice.classList.add("dice-shaking");
+
+  setTimeout(() => {
+    dice.classList.remove("dice-shaking");
+    const accent = (RANDOM_POOLS.find(p => p.key === pool) || RANDOM_POOLS[3]).accent;
+    resultEl.innerHTML = `
+      <div class="reveal-wrap">
+        <div class="reveal-card" style="--accent:${accent}">
+          <div class="reveal-label">Your drill is...</div>
+          <div class="reveal-name">${App.esc(pick.name)}</div>
+          <div class="reveal-meta">${App.esc(pick.subcategory)} · ${App.esc(pick.difficulty)} · ${App.esc(pick.estTime)}</div>
+          <button class="btn btn-primary" onclick="App.navigate('drill/${pick.id}')">View Full Details</button>
+        </div>
+      </div>
+    `;
+  }, 2000);
+};
+
+/* ---------- Drill detail ---------- */
+Views.drillDetail = function (id) {
+  const d = findDrill(id);
+  if (!d) return `<div class="empty-state">Drill not found.</div>`;
+  const fav = Store.isFavorite(d.id);
+  const isFitness = d.category === "fitness";
+
+  return `
+    <section>
+      <div class="page-header">
+        <button class="back-btn" onclick="history.back()">&larr;</button>
+        <h2>${App.esc(d.name)}</h2>
+      </div>
+
+      <div class="panel drill-detail">
+        <div class="chip-row">
+          <span class="chip">${App.esc(d.difficulty)}</span>
+          <span class="chip">Crew: ${App.esc(d.crewSize)}</span>
+          <span class="chip">${App.esc(d.estTime)}</span>
+          <span class="chip chip-cat">${App.esc(d.subcategory)}</span>
+        </div>
+
+        <h4>Equipment Needed</h4>
+        <ul class="plain-list">${d.equipment.map(e => `<li>${App.esc(e)}</li>`).join("")}</ul>
+
+        <h4>Objectives</h4>
+        <ul class="plain-list">${d.objectives.map(o => `<li>${App.esc(o)}</li>`).join("")}</ul>
+
+        <h4>Step-by-Step Instructions</h4>
+        <ol class="plain-list">${d.steps.map(s => `<li>${App.esc(s)}</li>`).join("")}</ol>
+
+        ${isFitness && d.why ? `<h4>Why It Matters</h4><p>${App.esc(d.why)}</p>` : ""}
+
+        <h4>Performance Standard</h4>
+        <p class="standard-text">${App.esc(d.standard)}</p>
+
+        <h4>Video Walkthrough</h4>
+        <div class="coming-soon">📺 A YouTube walkthrough for this drill is coming soon.</div>
+
+        <h4>Department Protocol &amp; Timing Rules</h4>
+        <div class="coming-soon">📋 Your department's official protocol and timing rules will appear here once added.</div>
+
+        <div id="timer-box" class="timer-box">
+          <div id="timer-display" class="timer-display">00:00.0</div>
+          <div class="timer-controls">
+            <button class="btn btn-outline" onclick="Views.timerToggle()">Start / Stop</button>
+            <button class="btn btn-ghost" onclick="Views.timerReset()">Reset</button>
+          </div>
+        </div>
+
+        <div class="action-grid">
+          <button class="btn btn-outline">📹 Upload Video</button>
+          <button class="btn btn-primary" onclick="Views.submitResult('${d.id}')">✅ Submit Result</button>
+          <button class="btn btn-outline" onclick="App.navigate('challenge-new/${d.id}')">⚔️ Challenge a Crew</button>
+          <button class="btn ${fav ? "btn-fav-active" : "btn-outline"}" onclick="Views.toggleFav('${d.id}'); Views.refreshFavBtn('${d.id}')" id="fav-btn">
+            ${fav ? "★ Saved" : "☆ Save Favorite"}
+          </button>
+        </div>
+
+        <div style="text-align:center;">
+          <button class="btn-share" onclick="Views.shareDrill('${d.id}')">🔗 Share this drill</button>
+        </div>
+      </div>
+    </section>
+  `;
+};
+
+Views.refreshFavBtn = function (id) {
+  const btn = document.getElementById("fav-btn");
+  if (!btn) return;
+  const fav = Store.isFavorite(id);
+  btn.textContent = fav ? "★ Saved" : "☆ Save Favorite";
+  btn.className = "btn " + (fav ? "btn-fav-active" : "btn-outline");
+};
+
+/* ---------- Share Drill ---------- */
+Views.shareDrill = function (id) {
+  const d = findDrill(id);
+  if (!d) return;
+  const url = location.origin + location.pathname + "#/drill/" + id;
+  const text = `Check out this TFDrills drill: ${d.name} — ${url}`;
+
+  if (navigator.share) {
+    navigator.share({ title: d.name, text: `Check out this TFDrills drill: ${d.name}`, url }).catch(() => {});
+    return;
+  }
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).catch(() => {});
+  }
+  App.toast("Link copied — opening messages...");
+  window.location.href = "sms:?&body=" + encodeURIComponent(text);
+};
+
+/* ---------- Timer ---------- */
+let _timerInterval = null;
+let _timerStart = 0;
+let _timerElapsed = 0;
+let _timerRunning = false;
+
+Views.timerToggle = function () {
+  const display = document.getElementById("timer-display");
+  if (!display) return;
+  if (_timerRunning) {
+    clearInterval(_timerInterval);
+    _timerElapsed += Date.now() - _timerStart;
+    _timerRunning = false;
+  } else {
+    _timerStart = Date.now();
+    _timerRunning = true;
+    _timerInterval = setInterval(() => {
+      const total = _timerElapsed + (Date.now() - _timerStart);
+      display.textContent = formatTime(total);
+    }, 100);
+  }
+};
+
+Views.timerReset = function () {
+  clearInterval(_timerInterval);
+  _timerRunning = false;
+  _timerElapsed = 0;
+  const display = document.getElementById("timer-display");
+  if (display) display.textContent = "00:00.0";
+};
+
+function formatTime(ms) {
+  const totalSec = ms / 1000;
+  const min = Math.floor(totalSec / 60);
+  const sec = Math.floor(totalSec % 60);
+  const tenth = Math.floor((ms % 1000) / 100);
+  return `${String(min).padStart(2, "0")}:${String(sec).padStart(2, "0")}.${tenth}`;
+}
+
+Views.submitResult = function (id) {
+  const d = findDrill(id);
+  const display = document.getElementById("timer-display");
+  const time = display ? display.textContent : "00:00.0";
+  Store.addResult({ drillId: id, drillName: d.name, category: d.category, time });
+  App.toast(`Result submitted: ${time}`);
+  App.render();
+};
+/* ============================================================
+   View: Favorites
+   ============================================================ */
+
+window.Views = window.Views || {};
+
+Views.favorites = function () {
+  const favIds = Store.getFavorites();
+  const drills = ALL_DRILLS.filter(d => favIds.includes(d.id));
+
+  return `
+    <section>
+      <div class="page-header"><h2>⭐ Favorites</h2></div>
+      ${drills.length ? `
+        <div class="panel">
+          <div class="drill-list">${drills.map(d => drillRowHtml(d)).join("")}</div>
+        </div>
+      ` : `<div class="empty-state">No favorites yet. Tap the star on any drill to save it here.</div>`}
+    </section>
+  `;
+};
+/* ============================================================
+   View: Home — "Get Training" hero grid + dashboard below
+   ============================================================ */
+
+window.Views = window.Views || {};
+
+const HOME_BUTTONS = [
+  { icon: "🎲", label: "Random Drill", accent: "#0d9488", onclick: "App.navigate('random')" },
+  { icon: "🚒", label: "Drills", accent: "#e11d2e", onclick: "Views.openDrillsPicker()" },
+  { icon: "⚔️", label: "Challenge a Crew", accent: "#2f6fed", onclick: "App.navigate('challenges')" },
+  { icon: "🏆", label: "The Challenge Board", accent: "#ca8a04", onclick: "App.navigate('board')" },
+  { icon: "📹", label: "Training Videos", accent: "#7c3aed", onclick: "App.navigate('videos')" },
+  { icon: "⭐", label: "Favorites", accent: "#db2777", onclick: "App.navigate('favorites')" }
+];
+
+Views.home = function () {
+  const profile = Store.getProfile();
+  const missions = Store.getMissionProgress();
+  const missionHtml = WEEKLY_MISSION_TEMPLATE.map(m => {
+    const done = missions[m.id] || 0;
+    const pct = Math.round((done / m.target) * 100);
+    return `
+      <div class="mission-row">
+        <div class="mission-label">${m.label}</div>
+        <div class="mission-bar"><div class="mission-fill" style="width:${pct}%"></div></div>
+        <div class="mission-count">${done}/${m.target}</div>
+      </div>`;
+  }).join("");
+
+  const todayDrill = ALL_DRILLS[new Date().getDate() % ALL_DRILLS.length];
+  const pendingChallenges = profile
+    ? Store.getChallenges().filter(c => c.status === "pending" && c.toStation === profile.station && c.toShift === profile.shift)
+    : [];
+  const myRank = profile ? CREWS.find(c => c.station === profile.station && c.shift === profile.shift) : null;
+  const newestVideos = VIDEOS.slice(0, 3);
+  const trending = VIDEOS.slice().sort((a, b) => b.views - a.views)[0];
+
+  return `
+    <section class="hero-grid-section">
+      <h2 class="section-title">Get Training</h2>
+      <div class="button-grid">
+        ${HOME_BUTTONS.map(b => `
+          <button class="grid-btn" style="--accent:${b.accent}" onclick="${b.onclick}">
+            <span class="grid-btn-icon-wrap">${b.icon}</span>
+            <span class="grid-btn-label">${b.label}</span>
+          </button>`).join("")}
+      </div>
+    </section>
+
+    <section class="dashboard">
+      <h2 class="section-title">Welcome back${profile && profile.name ? ", " + App.esc(profile.name) : ""}</h2>
+
+      <div class="dash-grid">
+        <div class="dash-card" onclick="App.navigate('drill/${todayDrill.id}')">
+          <div class="dash-card-label">Today's Random Drill</div>
+          <div class="dash-card-main">${App.esc(todayDrill.name)}</div>
+          <div class="dash-card-sub">${App.esc(todayDrill.subcategory)} · ${App.esc(todayDrill.difficulty)}</div>
+        </div>
+
+        <div class="dash-card" onclick="App.navigate('challenges')">
+          <div class="dash-card-label">Current Challenges</div>
+          <div class="dash-card-main">${pendingChallenges.length} Pending</div>
+          <div class="dash-card-sub">${pendingChallenges.length ? "Tap to respond" : "You're all caught up"}</div>
+        </div>
+
+        <div class="dash-card" onclick="App.navigate('board')">
+          <div class="dash-card-label">Crew Ranking</div>
+          <div class="dash-card-main">${myRank ? "#" + myRank.rank + " Overall" : "Unranked"}</div>
+          <div class="dash-card-sub">${myRank ? myRank.wins + "W - " + myRank.losses + "L" : "Complete a challenge to rank"}</div>
+        </div>
+
+        <div class="dash-card" onclick="App.navigate('videos')">
+          <div class="dash-card-label">Trending Drill</div>
+          <div class="dash-card-main">${App.esc(trending.drill)}</div>
+          <div class="dash-card-sub">${trending.views} views · ${trending.station} ${trending.shift}</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <h3>Weekly Mission Progress</h3>
+          <a href="#/missions" class="link-small">View badges</a>
+        </div>
+        ${missionHtml}
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><h3>Newest Videos</h3><a href="#/videos" class="link-small">See all</a></div>
+        <div class="mini-video-list">
+          ${newestVideos.map(v => `
+            <div class="mini-video-row">
+              <span class="mini-video-drill">${App.esc(v.drill)}</span>
+              <span class="mini-video-meta">${App.esc(v.station)} ${App.esc(v.shift)} · ${v.time}</span>
+            </div>`).join("")}
+        </div>
+      </div>
+    </section>
+  `;
+};
+/* ============================================================
+   View: Weekly Missions + Badges & Achievements
+   ============================================================ */
+
+window.Views = window.Views || {};
+
+Views.missions = function () {
+  const missions = Store.getMissionProgress();
+
+  return `
+    <section>
+      <div class="page-header"><h2>📆 Weekly Missions</h2></div>
+
+      <div class="panel">
+        ${WEEKLY_MISSION_TEMPLATE.map(m => {
+          const done = missions[m.id] || 0;
+          const complete = done >= m.target;
+          const pct = Math.round((done / m.target) * 100);
+          return `
+            <div class="mission-row-full ${complete ? "mission-complete" : ""}">
+              <div class="mission-row-top">
+                <span>${complete ? "✅" : "🔲"} ${m.label}</span>
+                <span>${done}/${m.target}</span>
+              </div>
+              <div class="mission-bar"><div class="mission-fill" style="width:${pct}%"></div></div>
+            </div>`;
+        }).join("")}
+        <p class="fine-print">Complete missions to earn XP, badges, and Challenge Board points. Resets weekly.</p>
+      </div>
+
+      <div class="page-header"><h2>🏅 Badges &amp; Achievements</h2></div>
+      <div class="badge-grid">
+        ${BADGES.map(b => `
+          <div class="badge-card">
+            <div class="badge-icon">${b.icon}</div>
+            <div class="badge-name">${App.esc(b.name)}</div>
+            <div class="badge-desc">${App.esc(b.desc)}</div>
+          </div>
+        `).join("")}
+      </div>
+    </section>
+  `;
+};
+/* ============================================================
+   View: "More" hub — notifications, videos, favorites, missions,
+   settings, donate, send ideas, invite
+   ============================================================ */
+
+window.Views = window.Views || {};
+
+const CASHAPP_HANDLE = "$TFDrills"; // TODO: replace with your real Cash App $cashtag
+const IDEAS_EMAIL = "jwmap3apple@gmail.com";
+const INVITE_MESSAGE = "Join our crew on TFDrills — drills, challenges, and the department leaderboard, all in one app: ";
+
+Views.more = function () {
+  const notifs = Store.getNotifications();
+
+  return `
+    <section>
+      <div class="page-header"><h2>☰ More</h2></div>
+
+      <div class="panel">
+        <h3>Quick Links</h3>
+        <div class="more-list">
+          <button class="more-row" onclick="App.navigate('videos')"><span>📹 Training Videos</span><span>&rsaquo;</span></button>
+          <button class="more-row" onclick="App.navigate('favorites')"><span>⭐ Favorites</span><span>&rsaquo;</span></button>
+          <button class="more-row" onclick="App.navigate('missions')"><span>📆 Weekly Missions &amp; Badges</span><span>&rsaquo;</span></button>
+          <button class="more-row" onclick="App.navigate('settings')"><span>⚙️ Settings</span><span>&rsaquo;</span></button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <h3>🔔 Notifications</h3>
+          ${notifs.length ? `<a class="link-small" onclick="Views.readAllNotifs()">Mark all read</a>` : ""}
+        </div>
+        ${notifs.length ? notifs.slice(0, 8).map(n => `
+          <div class="notif-row ${n.read ? "" : "notif-unread"}">
+            <div class="notif-title">${App.esc(n.title)}</div>
+            <div class="notif-body">${App.esc(n.body)}</div>
+          </div>
+        `).join("") : `<p class="subtle">No notifications yet.</p>`}
+      </div>
+
+      <div class="panel">
+        <h3>📣 Invite Your Crew</h3>
+        <p class="subtle">Bring your crew into the training house.</p>
+        <button class="btn btn-primary btn-block" onclick="Views.inviteCrew()">Invite to the Training House</button>
+      </div>
+
+      <div class="panel">
+        <h3>💡 Send Ideas</h3>
+        <p class="subtle">Got a drill, feature, or fix you want to see? Send it straight to the developer.</p>
+        <a class="btn btn-outline btn-block" href="mailto:${IDEAS_EMAIL}?subject=TFDrills%20Idea">Send an Idea</a>
+      </div>
+
+      ${donateSectionHtml()}
+    </section>
+  `;
+};
+
+function donateSectionHtml() {
+  return `
+    <div class="panel donate-panel">
+      <h3>❤️ Donate To The Cause</h3>
+      <p class="subtle">
+        This app is being developed on personal time and effort, not for profit, but to strengthen the love of our
+        passions, and to protect the community we swore to serve. All proceeds are reinvested into this app exclusively.
+        Donate only if your heart feels compelled to help this cause continue to grow.
+      </p>
+      <a class="btn btn-donate btn-block" href="https://cash.app/${CASHAPP_HANDLE.replace('$','')}" target="_blank" rel="noopener noreferrer">
+        Donate via Cash App
+      </a>
+
+      <details class="transparency">
+        <summary>Full Transparency — where donations go</summary>
+        <p>
+          As TFDrills grows with more users, more submitted video, and potentially more departments over time,
+          our stored data and hosting costs grow with it. Donations go directly toward:
+        </p>
+        <ul class="plain-list">
+          <li>Video and data storage as the video library grows</li>
+          <li>Hosting and infrastructure to keep the app fast and reliable</li>
+          <li>Ongoing development to keep adding drills, features, and department support</li>
+        </ul>
+        <p>TFDrills is committed to staying non-profit — donations sustain the tool, they don't monetize it.</p>
+      </details>
+    </div>
+  `;
+}
+
+Views.readAllNotifs = function () {
+  Store.markAllRead();
+  App.render();
+};
+
+Views.inviteCrew = function () {
+  const url = location.origin + location.pathname;
+  const text = INVITE_MESSAGE + url;
+  if (navigator.share) {
+    navigator.share({ title: "TFDrills", text: INVITE_MESSAGE, url }).catch(() => {});
+  } else {
+    const smsUrl = "sms:?&body=" + encodeURIComponent(text);
+    window.location.href = smsUrl;
+  }
+};
+
+/* ---------------- Settings ---------------- */
+Views.settings = function () {
+  const profile = Store.getProfile();
+  return `
+    <section>
+      <div class="page-header">
+        <button class="back-btn" onclick="App.navigate('more')">&larr;</button>
+        <h2>⚙️ Settings</h2>
+      </div>
+
+      <div class="panel">
+        <h3>Your Assignment</h3>
+        <form onsubmit="Views.saveSettings(event)">
+          <label class="field">
+            <span>Station</span>
+            <select name="station" required>
+              ${STATIONS.map(s => `<option value="${App.esc(s)}" ${profile.station === s ? "selected" : ""}>${s}</option>`).join("")}
+            </select>
+          </label>
+          <label class="field">
+            <span>Shift</span>
+            <div class="shift-toggle">
+              ${SHIFTS.map(sh => `
+                <label class="shift-option">
+                  <input type="radio" name="shift" value="${sh}" ${profile.shift === sh ? "checked" : ""} required />
+                  <span>${sh}</span>
+                </label>
+              `).join("")}
+            </div>
+          </label>
+          <label class="field">
+            <span>Email</span>
+            <input type="email" name="email" value="${App.esc(profile.email || "")}" />
+          </label>
+          <label class="field">
+            <span>Name</span>
+            <input type="text" name="name" value="${App.esc(profile.name || "")}" />
+          </label>
+          <button type="submit" class="btn btn-primary btn-block">Save Changes</button>
+        </form>
+      </div>
+
+      <div class="panel">
+        <p class="fine-print">
+          Your station and shift are stored only on this device and are used for challenges and leaderboards.
+          No personal information is required.
+        </p>
+      </div>
+    </section>
+  `;
+};
+
+Views.saveSettings = function (event) {
+  event.preventDefault();
+  const data = new FormData(event.target);
+  Store.setProfile({
+    station: data.get("station"),
+    shift: data.get("shift"),
+    email: data.get("email") || "",
+    name: data.get("name") || ""
+  });
+  App.toast("Settings saved");
+  App.navigate("more");
+};
+/* ============================================================
+   View: Onboarding — floating modal shown once, over the app
+   ============================================================ */
+
+window.Views = window.Views || {};
+
+Views.onboardingModal = function () {
+  const existing = Store.getProfile() || {};
+  return `
+    <div class="modal-backdrop" id="onboarding-backdrop">
+      <div class="modal-card">
+        <img src="data:image/png;base64,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" alt="TFDrills" class="modal-logo" />
+        <h1>Welcome to TFDrills</h1>
+        <p class="subtle">Help personalize your experience.</p>
+
+        <form id="onboarding-form" onsubmit="Views.submitOnboarding(event)">
+          <label class="field">
+            <span>Which station are you assigned to?</span>
+            <select name="station" required>
+              <option value="" disabled ${!existing.station ? "selected" : ""}>Select a station</option>
+              ${STATIONS.map(s => `<option value="${App.esc(s)}" ${existing.station === s ? "selected" : ""}>${s}</option>`).join("")}
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Which shift are you on?</span>
+            <div class="shift-toggle">
+              ${SHIFTS.map(sh => `
+                <label class="shift-option">
+                  <input type="radio" name="shift" value="${sh}" ${existing.shift === sh ? "checked" : ""} required />
+                  <span>${sh}</span>
+                </label>
+              `).join("")}
+            </div>
+          </label>
+
+          <label class="field">
+            <span>Email <span class="subtle">(for challenge alerts)</span></span>
+            <input type="email" name="email" placeholder="you@example.com" value="${App.esc(existing.email || "")}" />
+          </label>
+
+          <label class="field">
+            <span>Name <span class="subtle">(optional)</span></span>
+            <input type="text" name="name" placeholder="First name" value="${App.esc(existing.name || "")}" />
+          </label>
+
+          <button type="submit" class="btn btn-primary btn-block">Enter TFDrills</button>
+        </form>
+
+        <p class="fine-print">
+          Your station and shift are stored only on this device and are used for challenges and leaderboards.
+          No personal information is required. You'll only see this once.
+        </p>
+      </div>
+    </div>
+  `;
+};
+
+Views.submitOnboarding = function (event) {
+  event.preventDefault();
+  const form = event.target;
+  const data = new FormData(form);
+  const profile = {
+    station: data.get("station"),
+    shift: data.get("shift"),
+    email: data.get("email") || "",
+    name: data.get("name") || ""
+  };
+  Store.setProfile(profile);
+  App.toast(`Welcome, ${profile.station} ${profile.shift}!`);
+  App.render();
+};
+/* ============================================================
+   View: Training Video Library
+   ============================================================ */
+
+window.Views = window.Views || {};
+
+let _videoSort = "newest";
+let _videoQuery = "";
+
+function filteredVideos() {
+  let list = [...VIDEOS];
+  if (_videoQuery) {
+    const q = _videoQuery.toLowerCase();
+    list = list.filter(v =>
+      v.drill.toLowerCase().includes(q) ||
+      v.station.toLowerCase().includes(q) ||
+      v.shift.toLowerCase().includes(q)
+    );
+  }
+  if (_videoSort === "fastest") list.sort((a, b) => (a.time > b.time ? 1 : -1));
+  if (_videoSort === "rated") list.sort((a, b) => b.rating - a.rating);
+  if (_videoSort === "viewed") list.sort((a, b) => b.views - a.views);
+  return list;
+}
+
+function videoGridHtml(list) {
+  return list.length ? list.map(v => `
+    <div class="video-card">
+      <div class="video-thumb">▶</div>
+      <div class="video-card-body">
+        <div class="video-drill">${App.esc(v.drill)}</div>
+        <div class="video-meta">${App.esc(v.station)} ${App.esc(v.shift)}</div>
+        <div class="video-stats">⏱ ${App.esc(v.time)} · 👁 ${v.views} · ⭐ ${v.rating}</div>
+      </div>
+    </div>
+  `).join("") : `<div class="empty-state">No videos match your search.</div>`;
+}
+
+Views.videos = function () {
+  return `
+    <section>
+      <div class="page-header"><h2>📹 Training Video Library</h2></div>
+
+      <input type="search" class="search-input" placeholder="Search by drill, station, or shift..."
+        value="${App.esc(_videoQuery)}" oninput="Views.setVideoQuery(this.value)" />
+
+      <div class="filter-row">
+        ${[["newest", "Newest"], ["fastest", "Fastest Time"], ["rated", "Highest Rated"], ["viewed", "Most Viewed"]].map(([val, label]) => `
+          <button class="filter-chip ${_videoSort === val ? "active" : ""}" onclick="Views.setVideoSort('${val}')">${label}</button>
+        `).join("")}
+      </div>
+
+      <div class="video-grid">${videoGridHtml(filteredVideos())}</div>
+    </section>
+  `;
+};
+
+Views.setVideoQuery = function (val) {
+  _videoQuery = val;
+  const grid = document.querySelector(".video-grid");
+  if (grid) grid.innerHTML = videoGridHtml(filteredVideos());
+};
+
+Views.setVideoSort = function (val) {
+  _videoSort = val;
+  App.render();
+};
+/* ============================================================
+   TFDrills — App shell, router, shared helpers
+   ============================================================ */
+
+const App = (() => {
+  const root = () => document.getElementById("app");
+
+  const NAV_ITEMS = [
+    { path: "home", icon: "🏠", label: "Home" },
+    { path: "random", icon: "🎲", label: "Random" },
+    { path: "challenges", icon: "⚔️", label: "Challenge" },
+    { path: "board", icon: "🏆", label: "Board" },
+    { path: "more", icon: "☰", label: "More" }
+  ];
+
+  const FIRE_CLICK_SELECTOR =
+    ".btn, .grid-btn, .nav-item, .dash-card, .drill-row, .fav-star, .filter-chip, " +
+    ".more-row, .icon-btn, .video-card, .badge-card, .board-row, .picker-option, " +
+    ".pool-btn-lg, .back-btn, .challenge-card";
+
+  function esc(str) {
+    return String(str ?? "").replace(/[&<>"']/g, (m) => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[m]));
+  }
+
+  function toast(msg) {
+    let t = document.getElementById("toast");
+    if (!t) {
+      t = document.createElement("div");
+      t.id = "toast";
+      document.body.appendChild(t);
+    }
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => t.classList.remove("show"), 2400);
+  }
+
+  function fireBurst(x, y) {
+    const el = document.createElement("div");
+    el.className = "fire-burst";
+    el.style.left = x + "px";
+    el.style.top = y + "px";
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 550);
+  }
+
+  function navigate(path) {
+    location.hash = "#/" + path;
+  }
+
+  function parseRoute() {
+    const raw = location.hash.replace(/^#\/?/, "");
+    const parts = raw.split("/").filter(Boolean);
+    return { page: parts[0] || "home", params: parts.slice(1) };
+  }
+
+  function renderHeader() {
+    const profile = Store.getProfile();
+    const unread = Store.unreadCount();
+    return `
+      <header class="tfd-header">
+        <div class="tfd-header-inner">
+          <div class="header-utility">
+            ${profile ? `<span class="profile-chip">${esc(profile.station)} · ${esc(profile.shift)}</span>` : `<span></span>`}
+            <button class="icon-btn" onclick="App.navigate('more')" aria-label="Notifications">
+              🔔${unread > 0 ? `<span class="badge-dot">${unread}</span>` : ""}
+            </button>
+          </div>
+          <a href="#/home" class="brand">
+            <img src="data:image/png;base64,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" alt="TFDrills" class="brand-logo" />
+          </a>
+        </div>
+      </header>`;
+  }
+
+  function renderNav(activePage) {
+    return `
+      <nav class="bottom-nav">
+        ${NAV_ITEMS.map(item => `
+          <button class="nav-item ${activePage === item.path ? "active" : ""}" onclick="App.navigate('${item.path}')">
+            <span class="nav-icon">${item.icon}</span>
+            <span class="nav-label">${item.label}</span>
+          </button>
+        `).join("")}
+      </nav>`;
+  }
+
+  function layout(page, contentHtml) {
+    return `
+      ${renderHeader()}
+      <main class="tfd-main">${contentHtml}</main>
+      ${renderNav(page)}
+    `;
+  }
+
+  const ROUTES = {
+    home: () => layout("home", Views.home()),
+    random: () => layout("random", Views.random()),
+    "drills-fire": () => layout("home", Views.drillList("fire")),
+    "drills-ems": () => layout("home", Views.drillList("ems")),
+    "drills-fitness": () => layout("home", Views.drillList("fitness")),
+    drill: (params) => layout("home", Views.drillDetail(params[0])),
+    "challenge-new": (params) => layout("challenges", Views.challengeNew(params[0])),
+    challenges: () => layout("challenges", Views.challenges()),
+    board: () => layout("board", Views.board()),
+    videos: () => layout("more", Views.videos()),
+    favorites: () => layout("more", Views.favorites()),
+    missions: () => layout("more", Views.missions()),
+    settings: () => layout("more", Views.settings()),
+    more: () => layout("more", Views.more())
+  };
+
+  function routeKey(page, params) {
+    if (page === "drills" && params[0]) return "drills-" + params[0];
+    return page;
+  }
+
+  function render() {
+    const { page, params } = parseRoute();
+    const key = routeKey(page, params);
+    const handler = ROUTES[key] || ROUTES.home;
+
+    let html;
+    try {
+      html = handler(params);
+    } catch (e) {
+      html = layout("home", Views.home());
+    }
+    if (!Store.isOnboarded()) {
+      html += Views.onboardingModal();
+    }
+
+    root().innerHTML = html;
+    window.scrollTo(0, 0);
+    if (window.Views && Views.afterRender) Views.afterRender(key, params);
+  }
+
+  function initFireClickEffect() {
+    document.addEventListener("click", (e) => {
+      const target = e.target.closest(FIRE_CLICK_SELECTOR);
+      if (!target) return;
+      fireBurst(e.clientX, e.clientY);
+    });
+  }
+
+  function init() {
+    window.addEventListener("hashchange", render);
+    initFireClickEffect();
+    render();
+  }
+
+  return { init, render, navigate, esc, toast, fireBurst };
+})();
+
+document.addEventListener("DOMContentLoaded", App.init);
+
+</script>
+</body>
+</html>
