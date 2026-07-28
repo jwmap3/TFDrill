@@ -228,13 +228,21 @@ const App = (() => {
     });
   }
 
+  function dismissSplash() {
+    const splash = document.getElementById("splash");
+    if (!splash || splash.classList.contains("splash-hide")) return;
+    splash.classList.add("splash-hide");
+    setTimeout(() => splash.remove(), 500);
+  }
+
   function init() {
     window.addEventListener("hashchange", render);
     initFireClickEffect();
     render();
+    setTimeout(dismissSplash, 1300);
   }
 
-  return { init, render, navigate, esc, toast, fireBurst, toggleChat, sendChatMessage };
+  return { init, render, navigate, esc, toast, fireBurst, toggleChat, sendChatMessage, dismissSplash };
 })();
 
 document.addEventListener("DOMContentLoaded", App.init);

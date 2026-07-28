@@ -14,11 +14,14 @@
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
-  <div id="app">
-    <div class="boot-loader">
-      <img src="assets/logo3.png" alt="TFDrills" />
+  <div id="splash" class="splash-screen" onclick="App.dismissSplash()">
+    <div class="splash-inner">
+      <img src="assets/logo3.png" alt="TFDrills" class="splash-logo" />
+      <div class="splash-bar"></div>
     </div>
   </div>
+
+  <div id="app"></div>
 
   <script src="js/data.js"></script>
   <script src="js/store.js"></script>

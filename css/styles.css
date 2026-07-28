@@ -82,14 +82,54 @@ h1, h2, h3, h4 { margin: 0 0 10px; font-family: var(--font-display); font-weight
 .fine-print { color: var(--gray-dim); font-size: 0.78rem; line-height: 1.5; margin-top: 12px; }
 .link-small { color: var(--blue); font-size: 0.85rem; cursor: pointer; }
 
-/* ---------------- Boot loader ---------------- */
-.boot-loader {
-  height: 100vh;
+/* ---------------- Splash / brand intro (shown once on load, then dismissed) ---------------- */
+.splash-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: radial-gradient(circle at 50% 42%, var(--red) 0%, var(--red-dark) 78%);
+  transition: opacity 0.45s ease, visibility 0.45s ease;
 }
-.boot-loader img { width: 96px; opacity: 0.85; }
+.splash-screen.splash-hide {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.splash-inner { display: flex; flex-direction: column; align-items: center; gap: 22px; }
+.splash-logo {
+  width: min(220px, 44vw);
+  filter: drop-shadow(0 14px 34px rgba(0, 0, 0, 0.35));
+  animation: splashPop 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.splash-bar {
+  width: 74px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.35);
+  overflow: hidden;
+  animation: splashPop 0.7s cubic-bezier(0.22, 1, 0.36, 1) both 0.1s;
+}
+.splash-bar::after {
+  content: "";
+  display: block;
+  height: 100%;
+  width: 40%;
+  background: white;
+  border-radius: 999px;
+  animation: splashSweep 1.1s ease-in-out infinite;
+}
+@keyframes splashPop {
+  0% { opacity: 0; transform: scale(0.5) translateY(10px); }
+  55% { opacity: 1; transform: scale(1.08) translateY(0); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes splashSweep {
+  0% { transform: translateX(-120%); }
+  100% { transform: translateX(280%); }
+}
 
 /* ---------------- Floating identity + notification icons ---------------- */
 .floating-icons {
@@ -1155,92 +1195,115 @@ h1, h2, h3, h4 { margin: 0 0 10px; font-family: var(--font-display); font-weight
    top bar — both touch-first, neither steals width from content.
    ================================================================ */
 @media (max-width: 768px) {
-  /* ---- Bottom tab bar (was: hover-expand left rail) ---- */
+  /* ---- Bottom tab bar: floating frosted-glass pill, not a flat flush strip ---- */
   .left-sidebar {
     top: auto;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
+    bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+    left: 10px;
+    right: 10px;
+    width: auto;
     height: 60px;
     flex-direction: row;
     align-items: stretch;
-    border-right: none;
-    border-top: 2px solid var(--border);
-    padding: 0 0 env(safe-area-inset-bottom, 0);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(18px) saturate(1.6);
+    -webkit-backdrop-filter: blur(18px) saturate(1.6);
+    box-shadow: 0 14px 30px rgba(20, 16, 10, 0.16), 0 2px 8px rgba(20, 16, 10, 0.08);
+    padding: 0;
     z-index: 60;
     transition: none;
   }
-  .left-sidebar:hover { width: 100%; }
+  .left-sidebar:hover { width: auto; }
 
-  .sidebar-nav { flex-direction: row; width: 100%; height: 100%; gap: 0; padding: 0; margin: 0; }
+  .sidebar-nav { flex-direction: row; width: 100%; height: 100%; gap: 2px; padding: 6px; margin: 0; }
   .sidebar-nav-item {
     flex: 1;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 2px;
-    border-radius: 0;
-    padding: 6px 2px !important;
+    border-radius: 13px;
+    padding: 4px 2px !important;
     white-space: normal;
+    transition: transform 0.12s ease, background 0.15s ease, color 0.15s ease;
   }
   .left-sidebar:hover .sidebar-nav-item { padding-left: 2px !important; }
-  .sidebar-nav-icon { font-size: 1.4rem; width: auto; }
+  .sidebar-nav-item:active { transform: scale(0.92); }
+  .sidebar-nav-item.active { background: none; color: var(--red); }
+  .sidebar-nav-item.active .sidebar-nav-icon {
+    background: color-mix(in srgb, var(--red) 13%, white);
+    border-radius: 10px;
+  }
+  .sidebar-nav-icon {
+    font-size: 1.3rem;
+    width: 32px;
+    height: 22px;
+    line-height: 22px;
+    transition: background 0.15s ease;
+  }
   .sidebar-nav-label {
     opacity: 1 !important;
     max-width: none !important;
-    font-size: 0.6rem;
+    font-size: 0.58rem;
     font-weight: 700;
     line-height: 1.1;
     text-align: center;
   }
   .sidebar-lightbar { display: none; }
 
-  /* ---- Slim top bar (was: vertical floating icon column) ---- */
+  /* ---- Top bar: slim frosted-glass header (was: vertical floating icon column) ---- */
   .floating-icons {
     top: 0;
     left: 0;
     right: 0;
     bottom: auto;
     width: 100%;
-    height: 52px;
+    height: calc(54px + env(safe-area-inset-top, 0px));
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
     gap: 0;
-    padding: 0 10px;
-    background: white;
-    border-bottom: 2px solid var(--border);
+    padding: env(safe-area-inset-top, 0px) 14px 0;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(18px) saturate(1.6);
+    -webkit-backdrop-filter: blur(18px) saturate(1.6);
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 6px 18px rgba(20, 16, 10, 0.06);
     z-index: 60;
   }
   .floating-logo-btn { margin-bottom: 0; }
-  .floating-logo-img { width: 36px; height: 36px; filter: none; }
+  .floating-logo-img { width: 34px; height: 34px; filter: none; }
   .floating-icon-btn {
     width: 36px;
     height: 36px;
     background: none;
     border: none;
     box-shadow: none;
+    transition: transform 0.12s ease;
   }
   .floating-icon-btn:hover { transform: none; box-shadow: none; border-color: transparent; }
+  .floating-icon-btn:active, .floating-logo-btn:active { transform: scale(0.88); }
   .floating-icon-btn .helmet-icon { width: 27px; height: 27px; }
   .envelope-flame { font-size: 1.2rem; }
   .floating-emoji { font-size: 1.15rem; }
   .flame-badge { font-size: 0.68rem; bottom: -2px; right: -6px; }
   .badge-dot { top: -3px; right: -3px; font-size: 0.6rem; padding: 1px 5px; }
 
-  /* ---- Content clears the top bar + bottom tab bar, no side gutters ---- */
+  /* ---- Content clears the top bar + floating bottom pill, no side gutters ---- */
   .app-content {
     margin-left: 0;
-    padding: 52px 0 calc(60px + env(safe-area-inset-bottom, 0px));
+    padding: calc(54px + env(safe-area-inset-top, 0px)) 0 calc(90px + env(safe-area-inset-bottom, 0px));
   }
   .tfd-main { padding: 14px 14px 28px; }
 
-  /* ---- Chat: bottom sheet that sits above the tab bar, not a tiny box ---- */
+  /* ---- Chat: bottom sheet that floats above the tab bar pill ---- */
   .chat-panel {
     left: 10px;
     right: 10px;
-    bottom: calc(60px + env(safe-area-inset-bottom, 0px) + 10px);
+    bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+    border-radius: 18px;
     transform-origin: bottom center;
   }
   .chat-panel.open { width: auto; height: min(64vh, 520px); }
