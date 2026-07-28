@@ -1147,15 +1147,101 @@ h1, h2, h3, h4 { margin: 0 0 10px; font-family: var(--font-display); font-weight
 }
 
 /* ---------------- Small-screen tightening ---------------- */
-@media (max-width: 560px) {
-  .left-sidebar { width: 64px; }
-  .app-content { margin-left: 64px; padding: 0 120px 0 56px; }
-  .floating-icons { top: 14px; right: 14px; gap: 10px; }
-  .floating-icon-btn { width: 64px; height: 64px; }
-  .floating-icon-btn .helmet-icon { width: 46px; height: 46px; }
-  .floating-logo-img { width: 96px; height: 96px; }
-  .envelope-flame { font-size: 2rem; }
-  .floating-emoji { font-size: 1.9rem; }
-  .chat-panel.open { width: min(320px, calc(100vw - 32px)); height: min(440px, 70vh); }
-  .chat-panel { right: 16px; bottom: 16px; }
+/* ================================================================
+   MOBILE (<=768px): the hover-to-expand side rail and the vertical
+   floating icon column both assume a mouse and both eat horizontal
+   space a phone doesn't have. Below this width, the rail becomes a
+   standard bottom tab bar and the floating column becomes a slim
+   top bar — both touch-first, neither steals width from content.
+   ================================================================ */
+@media (max-width: 768px) {
+  /* ---- Bottom tab bar (was: hover-expand left rail) ---- */
+  .left-sidebar {
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 60px;
+    flex-direction: row;
+    align-items: stretch;
+    border-right: none;
+    border-top: 2px solid var(--border);
+    padding: 0 0 env(safe-area-inset-bottom, 0);
+    z-index: 60;
+    transition: none;
+  }
+  .left-sidebar:hover { width: 100%; }
+
+  .sidebar-nav { flex-direction: row; width: 100%; height: 100%; gap: 0; padding: 0; margin: 0; }
+  .sidebar-nav-item {
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2px;
+    border-radius: 0;
+    padding: 6px 2px !important;
+    white-space: normal;
+  }
+  .left-sidebar:hover .sidebar-nav-item { padding-left: 2px !important; }
+  .sidebar-nav-icon { font-size: 1.4rem; width: auto; }
+  .sidebar-nav-label {
+    opacity: 1 !important;
+    max-width: none !important;
+    font-size: 0.6rem;
+    font-weight: 700;
+    line-height: 1.1;
+    text-align: center;
+  }
+  .sidebar-lightbar { display: none; }
+
+  /* ---- Slim top bar (was: vertical floating icon column) ---- */
+  .floating-icons {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: auto;
+    width: 100%;
+    height: 52px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0;
+    padding: 0 10px;
+    background: white;
+    border-bottom: 2px solid var(--border);
+    z-index: 60;
+  }
+  .floating-logo-btn { margin-bottom: 0; }
+  .floating-logo-img { width: 36px; height: 36px; filter: none; }
+  .floating-icon-btn {
+    width: 36px;
+    height: 36px;
+    background: none;
+    border: none;
+    box-shadow: none;
+  }
+  .floating-icon-btn:hover { transform: none; box-shadow: none; border-color: transparent; }
+  .floating-icon-btn .helmet-icon { width: 27px; height: 27px; }
+  .envelope-flame { font-size: 1.2rem; }
+  .floating-emoji { font-size: 1.15rem; }
+  .flame-badge { font-size: 0.68rem; bottom: -2px; right: -6px; }
+  .badge-dot { top: -3px; right: -3px; font-size: 0.6rem; padding: 1px 5px; }
+
+  /* ---- Content clears the top bar + bottom tab bar, no side gutters ---- */
+  .app-content {
+    margin-left: 0;
+    padding: 52px 0 calc(60px + env(safe-area-inset-bottom, 0px));
+  }
+  .tfd-main { padding: 14px 14px 28px; }
+
+  /* ---- Chat: bottom sheet that sits above the tab bar, not a tiny box ---- */
+  .chat-panel {
+    left: 10px;
+    right: 10px;
+    bottom: calc(60px + env(safe-area-inset-bottom, 0px) + 10px);
+    transform-origin: bottom center;
+  }
+  .chat-panel.open { width: auto; height: min(64vh, 520px); }
 }
