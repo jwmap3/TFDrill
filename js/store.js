@@ -14,7 +14,8 @@ const Store = (() => {
     RESULTS: "tfd_results",
     MISSIONS: "tfd_missions",
     MISSION_WEEK: "tfd_mission_week",
-    SEEDED: "tfd_seeded"
+    SEEDED: "tfd_seeded",
+    CHAT: "tfd_chat"
   };
 
   function read(key, fallback) {
@@ -101,7 +102,7 @@ const Store = (() => {
         createdAt: Date.now() - 1000 * 60 * 60 * 3
       },
       {
-        id: "seed2", fromStation: "Station 8", fromShift: "B Shift",
+        id: "seed2", fromStation: "Station 4", fromShift: "B Shift",
         toStation: "Station 12", toShift: "A Shift",
         drillName: "High-Performance CPR & AED", timeToBeat: "Score: 96%",
         message: "Beat our compression fraction!", status: "accepted",
@@ -158,12 +159,34 @@ const Store = (() => {
     write(KEYS.MISSIONS, progress);
   }
 
+  /* ---------- Random Chat ---------- */
+  function seedChat() {
+    const seeded = [
+      { id: "cs1", sender: "Station 5 C Shift", text: "Anyone run the Denver Drill today? Trying to beat 4:15.", ts: Date.now() - 1000 * 60 * 40 },
+      { id: "cs2", sender: "Station 12 A Shift", text: "We hit 4:09 this morning.", ts: Date.now() - 1000 * 60 * 25 },
+      { id: "cs3", sender: "Station 4 B Shift", text: "Nice — sending the video to the board.", ts: Date.now() - 1000 * 60 * 10 },
+      { id: "cs4", sender: "Station 17 A Shift", text: "Somebody beat that before shift change lol", ts: Date.now() - 1000 * 60 * 3 }
+    ];
+    write(KEYS.CHAT, seeded);
+    return seeded;
+  }
+  function getChatMessages() {
+    return read(KEYS.CHAT, null) || seedChat();
+  }
+  function addChatMessage(sender, text) {
+    const list = getChatMessages();
+    list.push({ id: "cm" + Date.now() + Math.random().toString(36).slice(2, 6), sender, text, ts: Date.now() });
+    write(KEYS.CHAT, list);
+    return list;
+  }
+
   return {
     getProfile, setProfile, isOnboarded,
     getFavorites, isFavorite, toggleFavorite,
     getResults, addResult,
     getChallenges, addChallenge, respondChallenge,
     getNotifications, addNotification, unreadCount, markAllRead,
-    getMissionProgress
+    getMissionProgress,
+    getChatMessages, addChatMessage
   };
 })();

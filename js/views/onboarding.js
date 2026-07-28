@@ -9,7 +9,7 @@ Views.onboardingModal = function () {
   return `
     <div class="modal-backdrop" id="onboarding-backdrop">
       <div class="modal-card">
-        <img src="assets/logo.png" alt="TFDrills" class="modal-logo" />
+        <img src="assets/logo3.png" alt="TFDrills" class="modal-logo" />
         <h1>Welcome to TFDrills</h1>
         <p class="subtle">Help personalize your experience.</p>
 

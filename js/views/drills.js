@@ -6,8 +6,8 @@ window.Views = window.Views || {};
 
 const CATEGORY_META = {
   fire: { label: "Fire Drills", icon: "🚒", accent: "#e11d2e" },
-  ems: { label: "EMS Drills", icon: "🚑", accent: "#dc2626" },
-  fitness: { label: "Crew Fitness", icon: "💪", accent: "#16a34a" }
+  ems: { label: "EMS Drills", icon: "🚑", accent: "#2f6fed" },
+  fitness: { label: "Crew Fitness", icon: "💪", accent: "#45566b" }
 };
 
 function drillsByCategory(cat) {
@@ -86,12 +86,12 @@ Views.toggleFav = function (id) {
   App.render();
 };
 
-/* ---------- Random Drill: hero pool picker -> dice shake -> reveal ---------- */
+/* ---------- Random Drill: hero pool picker -> dice shake -> centered reveal popup ---------- */
 const RANDOM_POOLS = [
   { key: "fire", icon: "🚒", label: "Fire", accent: "#e11d2e" },
-  { key: "ems", icon: "🚑", label: "EMS", accent: "#dc2626" },
-  { key: "fitness", icon: "💪", label: "Fitness", accent: "#16a34a" },
-  { key: "all", icon: "🎲", label: "All Drills", accent: "#2f6fed" }
+  { key: "ems", icon: "🚑", label: "EMS", accent: "#2f6fed" },
+  { key: "fitness", icon: "💪", label: "Fitness", accent: "#45566b" },
+  { key: "all", icon: "🎲", label: "All Drills", accent: "#16255c" }
 ];
 
 Views.random = function () {
@@ -105,12 +105,11 @@ Views.random = function () {
       <p class="subtle">Pick a pool and let TFDrills choose your next drill.</p>
       <div class="pool-grid-lg">
         ${RANDOM_POOLS.map(p => `
-          <button class="pool-btn-lg ${p.key === "all" ? "pool-btn-all" : ""}" style="--accent:${p.accent}" onclick="Views.rollRandom('${p.key}')">
+          <button class="pool-btn-lg" style="--accent:${p.accent}" onclick="Views.rollRandom('${p.key}')">
             <span>${p.icon}</span>${p.label}
           </button>
         `).join("")}
       </div>
-      <div id="random-result"></div>
     </section>
   `;
 };
@@ -119,26 +118,34 @@ Views.rollRandom = function (pool) {
   const list = pool === "all" ? ALL_DRILLS : drillsByCategory(pool);
   const pick = list[Math.floor(Math.random() * list.length)];
   const dice = document.getElementById("dice-emoji");
-  const resultEl = document.getElementById("random-result");
-  if (!dice || !resultEl) return;
+  if (!dice) return;
 
-  resultEl.innerHTML = "";
   dice.classList.add("dice-shaking");
 
   setTimeout(() => {
     dice.classList.remove("dice-shaking");
     const accent = (RANDOM_POOLS.find(p => p.key === pool) || RANDOM_POOLS[3]).accent;
-    resultEl.innerHTML = `
-      <div class="reveal-wrap">
-        <div class="reveal-card" style="--accent:${accent}">
-          <div class="reveal-label">Your drill is...</div>
-          <div class="reveal-name">${App.esc(pick.name)}</div>
-          <div class="reveal-meta">${App.esc(pick.subcategory)} · ${App.esc(pick.difficulty)} · ${App.esc(pick.estTime)}</div>
-          <button class="btn btn-primary" onclick="App.navigate('drill/${pick.id}')">View Full Details</button>
-        </div>
+
+    const el = document.createElement("div");
+    el.id = "random-reveal-overlay";
+    el.className = "modal-backdrop";
+    el.innerHTML = `
+      <div class="reveal-card" style="--accent:${accent}">
+        <button class="reveal-close" onclick="Views.closeRandomReveal()" aria-label="Close">✕</button>
+        <div class="reveal-label">Your drill is...</div>
+        <div class="reveal-name">${App.esc(pick.name)}</div>
+        <div class="reveal-meta">${App.esc(pick.subcategory)} · ${App.esc(pick.difficulty)} · ${App.esc(pick.estTime)}</div>
+        <button class="btn btn-primary" onclick="App.navigate('drill/${pick.id}')">View Full Details</button>
       </div>
     `;
+    el.addEventListener("click", (e) => { if (e.target === el) Views.closeRandomReveal(); });
+    document.body.appendChild(el);
   }, 2000);
+};
+
+Views.closeRandomReveal = function () {
+  const el = document.getElementById("random-reveal-overlay");
+  if (el) el.remove();
 };
 
 /* ---------- Drill detail ---------- */

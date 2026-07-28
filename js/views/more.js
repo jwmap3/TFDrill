@@ -166,3 +166,136 @@ Views.saveSettings = function (event) {
   App.toast("Settings saved");
   App.navigate("more");
 };
+
+/* ---------------- Check Your Stats ---------------- */
+Views.stats = function () {
+  const results = Store.getResults();
+  const favorites = Store.getFavorites();
+  const fireCount = results.filter(r => r.category === "fire").length;
+  const emsCount = results.filter(r => r.category === "ems").length;
+  const fitnessCount = results.filter(r => r.category === "fitness").length;
+
+  return `
+    <section>
+      <div class="page-header">
+        <button class="back-btn" onclick="App.navigate('more')">&larr;</button>
+        <h2>🎖 Check Your Stats</h2>
+      </div>
+
+      <div class="dash-grid">
+        <div class="dash-card">
+          <div class="dash-card-label">Total Drills Logged</div>
+          <div class="dash-card-main">${results.length}</div>
+          <div class="dash-card-sub">All-time submissions</div>
+        </div>
+        <div class="dash-card">
+          <div class="dash-card-label">Favorites Saved</div>
+          <div class="dash-card-main">${favorites.length}</div>
+          <div class="dash-card-sub">Quick-access drills</div>
+        </div>
+        <div class="dash-card">
+          <div class="dash-card-label">Fire / EMS / Fitness</div>
+          <div class="dash-card-main">${fireCount} / ${emsCount} / ${fitnessCount}</div>
+          <div class="dash-card-sub">Category breakdown</div>
+        </div>
+        <div class="dash-card" onclick="App.navigate('missions')">
+          <div class="dash-card-label">Badges &amp; Missions</div>
+          <div class="dash-card-main">View Progress</div>
+          <div class="dash-card-sub">Tap to open</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Your Submitted Results</h3>
+        ${results.length ? `
+          <div class="drill-list">
+            ${results.map(r => `
+              <div class="drill-row">
+                <div class="drill-row-main">
+                  <div class="drill-row-name">${App.esc(r.drillName)}</div>
+                  <div class="drill-row-meta">${App.esc(r.time)} · ${new Date(r.ts).toLocaleDateString()}</div>
+                </div>
+              </div>
+            `).join("")}
+          </div>
+        ` : `<p class="subtle">No results submitted yet — complete a drill and hit "Submit Result" to see it here.</p>`}
+      </div>
+    </section>
+  `;
+};
+
+/* ---------------- Profile menu (full page — replaces old header dropdown) ---------------- */
+Views.profileMenu = function () {
+  const profile = Store.getProfile();
+  const stationNum = profile ? profile.station.replace("Station ", "") : "—";
+  const shiftLetter = profile ? profile.shift.charAt(0) : "—";
+
+  return `
+    <section>
+      <div class="page-header"><h2>Your Profile</h2></div>
+
+      <div class="identity-card" style="margin-bottom:22px;">
+        <img src="assets/helmet.png" alt="" class="helmet-icon" aria-hidden="true" />
+        <div class="identity-card-info">
+          <div class="identity-card-station">${App.esc(stationNum)} · ${App.esc(shiftLetter)}</div>
+          <div class="subtle">${profile && profile.name ? App.esc(profile.name) : (profile ? "Assigned crew member" : "Profile not set up")}</div>
+        </div>
+      </div>
+
+      <div class="button-grid" style="grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));">
+        <button class="grid-btn" style="--accent:#2f6fed" onclick="App.navigate('stats')">
+          <span class="grid-btn-icon-wrap">🎖</span>
+          <span class="grid-btn-label">Check Your Stats</span>
+        </button>
+        <button class="grid-btn" style="--accent:#b9790a" onclick="App.navigate('favorites')">
+          <span class="grid-btn-icon-wrap">⭐</span>
+          <span class="grid-btn-label">Favorites</span>
+        </button>
+        <button class="grid-btn" style="--accent:#45566b" onclick="App.navigate('settings')">
+          <span class="grid-btn-icon-wrap">⚙️</span>
+          <span class="grid-btn-label">Settings</span>
+        </button>
+      </div>
+    </section>
+  `;
+};
+
+/* ---------------- Notifications (full page — replaces old envelope dropdown) ---------------- */
+Views.notificationsPage = function () {
+  const profile = Store.getProfile();
+  const received = profile
+    ? Store.getChallenges().filter(c => c.status === "pending" && c.toStation === profile.station && c.toShift === profile.shift)
+    : [];
+  const activity = typeof ACTIVITY_FEED !== "undefined" ? ACTIVITY_FEED : [];
+
+  return `
+    <section>
+      <div class="page-header"><h2>🔥✉️ Announcements &amp; Challenges</h2></div>
+
+      <div class="panel">
+        <h3>Challenges Received</h3>
+        ${received.length ? received.map(c => `
+          <div class="side-challenge-row" onclick="App.navigate('challenges')">
+            <span class="side-challenge-top">⚔️ ${App.esc(c.fromStation)} ${App.esc(c.fromShift)}</span>
+            <span class="side-challenge-meta">${App.esc(c.drillName)} · beat ${App.esc(c.timeToBeat)}</span>
+          </div>
+        `).join("") : `<p class="subtle">No challenges waiting on you.</p>`}
+      </div>
+
+      <div class="panel">
+        <h3>Recent Activity</h3>
+        <div class="activity-feed">
+          ${activity.map(a => `
+            <div class="activity-row">
+              <div class="activity-dot"></div>
+              <div>
+                <div class="activity-text">${App.esc(a.text)}</div>
+                <div class="activity-time">${App.esc(a.time)}</div>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+    </section>
+  `;
+};

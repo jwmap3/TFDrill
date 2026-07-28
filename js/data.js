@@ -3,14 +3,10 @@
    Replace with real API data when a backend is connected.
    ============================================================ */
 
-const STATIONS = [
-  "Station 1", "Station 2", "Station 3", "Station 4", "Station 5",
-  "Station 6", "Station 7", "Station 8", "Station 9", "Station 10",
-  "Station 11", "Station 12", "Station 13", "Station 14", "Station 15",
-  "Station 16", "Station 17", "Station 18", "Station 19", "Station 20"
-];
+const STATION_NUMBERS = [3, 4, 5, 6, 7, 9, 11, 12, 13, 14, 16, 17, 18, 19, 21, 23, 24, 25];
+const STATIONS = STATION_NUMBERS.map(n => "Station " + n);
 
-const SHIFTS = ["A Shift", "B Shift", "C Shift", "D Shift"];
+const SHIFTS = ["A Shift", "B Shift", "C Shift"];
 
 let _id = 1;
 const nid = () => "d" + (_id++);
@@ -464,18 +460,18 @@ const BADGES = [
 /* ---------------- MOCK CREW LEADERBOARD ---------------- */
 const CREWS = [
   { station: "Station 17", shift: "A Shift", wins: 14, losses: 3, streak: 5, rank: 1, videos: 22, badges: ["hose-beast","iron-crew","streak-30"] },
-  { station: "Station 8", shift: "B Shift", wins: 12, losses: 4, streak: 2, rank: 2, videos: 18, badges: ["ems-guru","consistency"] },
+  { station: "Station 4", shift: "B Shift", wins: 12, losses: 4, streak: 2, rank: 2, videos: 18, badges: ["ems-guru","consistency"] },
   { station: "Station 5", shift: "C Shift", wins: 11, losses: 6, streak: 0, rank: 3, videos: 15, badges: ["search-master"] },
   { station: "Station 12", shift: "A Shift", wins: 10, losses: 5, streak: 3, rank: 4, videos: 14, badges: ["pump-wizard"] },
   { station: "Station 3", shift: "B Shift", wins: 9, losses: 7, streak: 5, rank: 5, videos: 11, badges: ["iron-crew"] },
   { station: "Station 7", shift: "A Shift", wins: 8, losses: 5, streak: 1, rank: 6, videos: 9, badges: ["iron-crew"] },
-  { station: "Station 20", shift: "D Shift", wins: 7, losses: 8, streak: 0, rank: 7, videos: 8, badges: [] },
+  { station: "Station 25", shift: "C Shift", wins: 7, losses: 8, streak: 0, rank: 7, videos: 8, badges: [] },
   { station: "Station 9", shift: "C Shift", wins: 6, losses: 9, streak: 0, rank: 8, videos: 6, badges: [] }
 ];
 
 /* ---------------- MOCK ACTIVITY FEED ---------------- */
 const ACTIVITY_FEED = [
-  { text: "Station 8 B Shift completed Denver Drill in 4:11.", time: "12 min ago" },
+  { text: "Station 4 B Shift completed Denver Drill in 4:11.", time: "12 min ago" },
   { text: "Station 5 C Shift accepted Station 17 A Shift's challenge.", time: "38 min ago" },
   { text: "Station 12 A Shift set a new Hose Advancement record.", time: "1 hr ago" },
   { text: "Station 7 A Shift earned the Iron Crew badge.", time: "3 hr ago" },
@@ -487,7 +483,7 @@ const ACTIVITY_FEED = [
 /* ---------------- MOCK VIDEO LIBRARY ---------------- */
 const VIDEOS = [
   { id: "v1", drill: "The Denver Drill", station: "Station 17", shift: "A Shift", time: "4:18", views: 142, rating: 4.8 },
-  { id: "v2", drill: "The Denver Drill", station: "Station 8", shift: "B Shift", time: "4:11", views: 98, rating: 4.9 },
+  { id: "v2", drill: "The Denver Drill", station: "Station 4", shift: "B Shift", time: "4:11", views: 98, rating: 4.9 },
   { id: "v3", drill: "Vehicle Extrication — Door Removal", station: "Station 5", shift: "C Shift", time: "9:42", views: 61, rating: 4.5 },
   { id: "v4", drill: "High-Performance CPR & AED", station: "Station 17", shift: "A Shift", time: "n/a", views: 205, rating: 4.9 },
   { id: "v5", drill: "RIT — Downed Firefighter Removal", station: "Station 12", shift: "A Shift", time: "8:55", views: 77, rating: 4.7 },

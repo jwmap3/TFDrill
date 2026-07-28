@@ -6,17 +6,28 @@ const App = (() => {
   const root = () => document.getElementById("app");
 
   const NAV_ITEMS = [
-    { path: "home", icon: "🏠", label: "Home" },
-    { path: "random", icon: "🎲", label: "Random" },
-    { path: "challenges", icon: "⚔️", label: "Challenge" },
-    { path: "board", icon: "🏆", label: "Board" },
-    { path: "more", icon: "☰", label: "More" }
+    { path: "home", icon: "🏠", label: "Home", onclick: "App.navigate('home')" },
+    { path: "drills", icon: "🚒", label: "All Drills", onclick: "Views.openDrillsPicker()" },
+    { path: "challenges", icon: "⚔️", label: "Challenge a Crew", onclick: "App.navigate('challenges')" },
+    { path: "board", icon: "🏆", label: "Challenge Board", onclick: "App.navigate('board')" },
+    { path: "more", icon: "☰", label: "More", onclick: "App.navigate('more')" }
   ];
 
   const FIRE_CLICK_SELECTOR =
-    ".btn, .grid-btn, .nav-item, .dash-card, .drill-row, .fav-star, .filter-chip, " +
-    ".more-row, .icon-btn, .video-card, .badge-card, .board-row, .picker-option, " +
-    ".pool-btn-lg, .back-btn, .challenge-card";
+    ".btn, .grid-btn, .dash-card, .drill-row, .fav-star, .filter-chip, " +
+    ".more-row, .video-card, .badge-card, .board-row, .picker-option, " +
+    ".pool-btn-lg, .back-btn, .challenge-card, .station-chip, " +
+    ".sidebar-nav-item, .feed-card, .identity-card, .side-challenge-row, .floating-icon-btn, .home-bubble";
+
+  const HELMET_ICON = `<img src="assets/helmet.png" alt="" class="helmet-icon" aria-hidden="true" />`;
+
+  const CHAT_COLORS = ["#c8102e", "#2f6fed", "#16255c", "#45566b", "#1f9457", "#b9790a", "#7c3aed", "#0891b2"];
+  function chatColor(sender) {
+    let h = 0;
+    for (let i = 0; i < sender.length; i++) h = (h * 31 + sender.charCodeAt(i)) >>> 0;
+    return CHAT_COLORS[h % CHAT_COLORS.length];
+  }
+  let _chatOpen = false;
 
   function esc(str) {
     return String(str ?? "").replace(/[&<>"']/g, (m) => ({
@@ -56,42 +67,110 @@ const App = (() => {
     return { page: parts[0] || "home", params: parts.slice(1) };
   }
 
-  function renderHeader() {
-    const profile = Store.getProfile();
+  function renderFloatingIcons() {
     const unread = Store.unreadCount();
     return `
-      <header class="tfd-header">
-        <div class="tfd-header-inner">
-          <div class="header-utility">
-            ${profile ? `<span class="profile-chip">${esc(profile.station)} · ${esc(profile.shift)}</span>` : `<span></span>`}
-            <button class="icon-btn" onclick="App.navigate('more')" aria-label="Notifications">
-              🔔${unread > 0 ? `<span class="badge-dot">${unread}</span>` : ""}
-            </button>
-          </div>
-          <a href="#/home" class="brand">
-            <img src="assets/logo.png" alt="TFDrills" class="brand-logo" />
-          </a>
-        </div>
-      </header>`;
+      <div class="floating-icons">
+        <a href="#/home" class="floating-icon-btn floating-logo-btn" aria-label="TFDrills home">
+          <img src="assets/logo3.png" alt="TFDrills" class="floating-logo-img" />
+        </a>
+        <button class="floating-icon-btn" onclick="App.navigate('profile')" aria-label="Your profile">
+          ${HELMET_ICON}
+        </button>
+        <button class="floating-icon-btn" onclick="App.navigate('notifications')" aria-label="Notifications">
+          <span class="envelope-flame">✉️<span class="flame-badge">🔥</span></span>
+          ${unread > 0 ? `<span class="badge-dot">${unread}</span>` : ""}
+        </button>
+        <button class="floating-icon-btn" onclick="Views.openFootagePicker()" aria-label="Drill Footage">
+          <span class="floating-emoji">🎬</span>
+        </button>
+        <button class="floating-icon-btn" onclick="App.navigate('random')" aria-label="Random Drill">
+          <span class="floating-emoji">🎲</span>
+        </button>
+        <button class="floating-icon-btn" onclick="App.toggleChat()" aria-label="Random Chat">
+          <span class="floating-emoji">💬</span>
+        </button>
+      </div>`;
   }
 
-  function renderNav(activePage) {
+  function renderSidebar(activePage) {
     return `
-      <nav class="bottom-nav">
-        ${NAV_ITEMS.map(item => `
-          <button class="nav-item ${activePage === item.path ? "active" : ""}" onclick="App.navigate('${item.path}')">
-            <span class="nav-icon">${item.icon}</span>
-            <span class="nav-label">${item.label}</span>
-          </button>
-        `).join("")}
-      </nav>`;
+      <aside class="left-sidebar">
+        <nav class="sidebar-nav">
+          ${NAV_ITEMS.map(item => `
+            <button class="sidebar-nav-item ${activePage === item.path ? "active" : ""}" onclick="${item.onclick}">
+              <span class="sidebar-nav-icon">${item.icon}</span>
+              <span class="sidebar-nav-label">${item.label}</span>
+            </button>
+          `).join("")}
+        </nav>
+        <div class="light-bar sidebar-lightbar"><span class="lb-red"></span><span class="lb-blue"></span></div>
+      </aside>`;
+  }
+
+  function renderChatPanel() {
+    const profile = Store.getProfile();
+    const me = profile ? profile.station + " " + profile.shift : "You";
+    const messages = Store.getChatMessages();
+    return `
+      <div class="chat-panel ${_chatOpen ? "open" : ""}" id="chat-panel">
+        <div class="chat-panel-header">
+          <span>💬 Random Chat</span>
+          <button class="chat-close" onclick="App.toggleChat()" aria-label="Close chat">✕</button>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+          ${messages.map(m => `
+            <div class="chat-bubble-row ${m.sender === me ? "chat-bubble-row-me" : ""}">
+              <div class="chat-bubble" style="--bubble-color:${chatColor(m.sender)}">
+                <div class="chat-bubble-sender">${esc(m.sender)}</div>
+                <div class="chat-bubble-text">${esc(m.text)}</div>
+              </div>
+            </div>`).join("")}
+        </div>
+        <form class="chat-input-row" onsubmit="App.sendChatMessage(event)">
+          <input type="text" id="chat-input" placeholder="Say something to the department..." autocomplete="off" />
+          <button type="submit" class="chat-send-btn" aria-label="Send">&#10148;</button>
+        </form>
+      </div>`;
+  }
+
+  function toggleChat() {
+    _chatOpen = !_chatOpen;
+    render();
+    if (_chatOpen) scrollChatToBottom();
+  }
+
+  function scrollChatToBottom() {
+    setTimeout(() => {
+      const box = document.getElementById("chat-messages");
+      if (box) box.scrollTop = box.scrollHeight;
+    }, 0);
+  }
+
+  function sendChatMessage(event) {
+    event.preventDefault();
+    const input = document.getElementById("chat-input");
+    const text = input ? input.value.trim() : "";
+    if (!text) return;
+    const profile = Store.getProfile();
+    const me = profile ? profile.station + " " + profile.shift : "You";
+    Store.addChatMessage(me, text);
+    render();
+    scrollChatToBottom();
+    const freshInput = document.getElementById("chat-input");
+    if (freshInput) freshInput.focus();
   }
 
   function layout(page, contentHtml) {
     return `
-      ${renderHeader()}
-      <main class="tfd-main">${contentHtml}</main>
-      ${renderNav(page)}
+      <div class="app-shell">
+        ${renderSidebar(page)}
+        <div class="app-content">
+          <main class="tfd-main">${contentHtml}</main>
+        </div>
+      </div>
+      ${renderFloatingIcons()}
+      ${renderChatPanel()}
     `;
   }
 
@@ -103,13 +182,17 @@ const App = (() => {
     "drills-fitness": () => layout("home", Views.drillList("fitness")),
     drill: (params) => layout("home", Views.drillDetail(params[0])),
     "challenge-new": (params) => layout("challenges", Views.challengeNew(params[0])),
+    "challenge-to": (params) => layout("challenges", Views.challengeToForm(params[0], params[1])),
     challenges: () => layout("challenges", Views.challenges()),
     board: () => layout("board", Views.board()),
-    videos: () => layout("more", Views.videos()),
+    videos: (params) => layout("more", Views.videos(params[0])),
     favorites: () => layout("more", Views.favorites()),
     missions: () => layout("more", Views.missions()),
     settings: () => layout("more", Views.settings()),
-    more: () => layout("more", Views.more())
+    stats: () => layout("more", Views.stats()),
+    more: () => layout("more", Views.more()),
+    profile: () => layout("home", Views.profileMenu()),
+    notifications: () => layout("home", Views.notificationsPage())
   };
 
   function routeKey(page, params) {
@@ -151,7 +234,7 @@ const App = (() => {
     render();
   }
 
-  return { init, render, navigate, esc, toast, fireBurst };
+  return { init, render, navigate, esc, toast, fireBurst, toggleChat, sendChatMessage };
 })();
 
 document.addEventListener("DOMContentLoaded", App.init);
